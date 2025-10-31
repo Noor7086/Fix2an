@@ -1,0 +1,249 @@
+// This is your Prisma schema file for SQLite development
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("CUSTOMER") // CUSTOMER, WORKSHOP, ADMIN
+  phone         String?
+  address       String?
+  city          String?
+  postalCode    String?
+  country       String    @default("SE")
+  latitude      Float?
+  longitude     Float?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  workshops     Workshop[]
+  requests      Request[]
+  bookings      Booking[]
+  reviews       Review[]
+  notifications Notification[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Workshop {
+  id                String   @id @default(cuid())
+  userId            String   @unique
+  companyName       String
+  organizationNumber String
+  address           String
+  city              String
+  postalCode        String
+  country           String   @default("SE")
+  latitude          Float
+  longitude         Float
+  phone             String
+  email             String
+  website           String?
+  description       String?
+  openingHours      String   // Store as JSON string
+  brandsHandled     String   // Store as comma-separated string
+  isVerified        Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  rating            Float    @default(0)
+  reviewCount       Int      @default(0)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  user              User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  documents         WorkshopDocument[]
+  offers            Offer[]
+  bookings          Booking[]
+  reviews           Review[]
+  payoutReports     PayoutReport[]
+}
+
+model WorkshopDocument {
+  id         String   @id @default(cuid())
+  workshopId String
+  type       String   // F_TAX_CERTIFICATE, LIABILITY_INSURANCE, etc.
+  fileName   String
+  fileUrl    String
+  uploadedAt DateTime @default(now())
+
+  workshop Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+}
+
+model Vehicle {
+  id        String   @id @default(cuid())
+  make      String
+  model     String
+  year      Int
+  createdAt DateTime @default(now())
+
+  requests Request[]
+}
+
+model InspectionReport {
+  id        String   @id @default(cuid())
+  fileName  String
+  fileUrl   String
+  fileSize  Int
+  mimeType  String
+  uploadedAt DateTime @default(now())
+
+  requests Request[]
+}
+
+model Request {
+  id          String      @id @default(cuid())
+  customerId  String
+  vehicleId   String
+  reportId    String
+  description String?
+  status      String      @default("NEW") // NEW, IN_BIDDING, BIDDING_CLOSED, BOOKED, COMPLETED, CANCELLED
+  latitude    Float
+  longitude   Float
+  address     String
+  city        String
+  postalCode  String
+  country     String      @default("SE")
+  expiresAt   DateTime
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  customer    User        @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  vehicle     Vehicle     @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+  report      InspectionReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  offers      Offer[]
+  bookings    Booking[]
+}
+
+model Offer {
+  id          String      @id @default(cuid())
+  requestId   String
+  workshopId  String
+  price       Float       // Price including VAT
+  note        String?
+  availableDates String   // Store as JSON string
+  estimatedDuration Int   // Duration in minutes
+  warranty    String?
+  status      String      @default("SENT") // SENT, ACCEPTED, DECLINED, EXPIRED
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  request     Request     @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  workshop    Workshop    @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  bookings    Booking[]
+}
+
+model Booking {
+  id          String        @id @default(cuid())
+  requestId   String
+  offerId     String
+  customerId  String
+  workshopId  String
+  scheduledAt DateTime
+  status      String        @default("CONFIRMED") // CONFIRMED, RESCHEDULED, CANCELLED, DONE, NO_SHOW
+  klarnaOrderId String?     // Klarna order ID for payment tracking
+  totalAmount Float         // Total amount paid
+  commission  Float         // Platform commission
+  workshopAmount Float      // Amount to pay workshop
+  notes       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  request     Request       @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  offer       Offer         @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  customer    User          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  workshop    Workshop      @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+  reviews     Review[]
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  bookingId  String   @unique
+  customerId String
+  workshopId String
+  rating     Int      // 1-5 stars
+  comment    String?
+  isPublished Boolean @default(true)
+  createdAt  DateTime @default(now())
+
+  booking    Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  customer   User     @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  workshop   Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+}
+
+model PayoutReport {
+  id              String   @id @default(cuid())
+  workshopId      String
+  month           Int
+  year            Int
+  totalJobs       Int
+  totalAmount     Float
+  commission      Float
+  workshopAmount  Float
+  isPaid          Boolean  @default(false)
+  paidAt          DateTime?
+  createdAt       DateTime @default(now())
+
+  workshop        Workshop @relation(fields: [workshopId], references: [id], onDelete: Cascade)
+
+  @@unique([workshopId, month, year])
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  type      String           // ACCOUNT_VERIFICATION, UPLOAD_RECEIVED, etc.
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  data      String?          // Store as JSON string
+  createdAt DateTime         @default(now())
+
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+

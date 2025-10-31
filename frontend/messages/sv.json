@@ -1,0 +1,247 @@
+{
+	"common": {
+		"loading": "Laddar...",
+		"error": "Fel",
+		"success": "Framgång",
+		"cancel": "Avbryt",
+		"save": "Spara",
+		"delete": "Ta bort",
+		"edit": "Redigera",
+		"view": "Visa",
+		"close": "Stäng",
+		"back": "Tillbaka",
+		"next": "Nästa",
+		"previous": "Föregående",
+		"submit": "Skicka",
+		"confirm": "Bekräfta",
+		"yes": "Ja",
+		"no": "Nej",
+		"required": "Obligatoriskt",
+		"optional": "Valfritt",
+		"or": "Eller"
+	},
+	"navigation": {
+		"home": "Hem",
+		"login": "Logga in",
+		"register": "Registrera dig",
+		"logout": "Logga ut",
+		"dashboard": "Dashboard",
+		"profile": "Profil",
+		"settings": "Inställningar",
+		"my_cases": "Mina ärenden",
+		"upload": "Ladda upp"
+	},
+	"homepage": {
+		"title": "Hitta din verkstad enkelt",
+		"subtitle": "Ladda upp din inspektionsrapport och få erbjudanden från verifierade verkstäder i ditt område. Jämför priser, tider och recensioner - allt på ett ställe.",
+		"cta_primary": "Börja här - Ladda upp rapport",
+		"cta_secondary": "Så fungerar det",
+		"how_it_works": {
+			"title": "Så enkelt är det",
+			"subtitle": "Tre enkla steg till din nya verkstad",
+			"step1": {"title": "Ladda upp rapport", "description": "Ladda upp din inspektionsrapport (JPG, PNG eller PDF) och berätta vad som behöver fixas."},
+			"step2": {"title": "Få erbjudanden", "description": "Verifierade verkstäder i ditt område skickar erbjudanden med priser och tider."},
+			"step3": {"title": "Boka och betala", "description": "Välj det bästa erbjudandet, boka en tid och betala säkert via Klarna."}
+		},
+		"features": {
+			"title": "Varför välja Fixa2an?",
+			"verified": {"title": "Verifierade verkstäder", "description": "Alla verkstäder är kontrollerade och har giltiga certifikat."},
+			"fast": {"title": "Snabba erbjudanden", "description": "Få erbjudanden inom 24 timmar från verkstäder i ditt område."},
+			"transparent": {"title": "Transparenta priser", "description": "Jämför priser, tider och recensioner innan du bestämmer dig."},
+			"secure": {"title": "Säker betalning", "description": "Betala säkert via Klarna med alla deras betalningsalternativ."}
+		},
+		"cta": {"title": "Redo att hitta din verkstad?", "subtitle": "Ladda upp din inspektionsrapport och få erbjudanden idag", "button": "Börja nu - Det är gratis"}
+	},
+	"auth": {
+		"signin": {
+			"title": "Logga in på ditt konto",
+			"subtitle": "Eller skapa ett nytt konto",
+			"email": "E-postadress",
+			"password": "Lösenord",
+			"submit": "Logga in",
+			"magic_link": "Skicka inloggningslänk via e-post",
+			"forgot_password": "Glömt ditt lösenord?",
+			"workshop_signup": "Är du en verkstad? Registrera dig här"
+		},
+		"signup": {
+			"title": "Skapa ditt konto",
+			"subtitle": "Eller logga in på ditt befintliga konto",
+			"name": "Namn",
+			"email": "E-postadress",
+			"phone": "Telefonnummer",
+			"address": "Adress",
+			"city": "Stad",
+			"postal_code": "Postnummer",
+			"password": "Lösenord",
+			"confirm_password": "Bekräfta lösenord",
+			"submit": "Skapa konto",
+			"terms": "Genom att skapa ett konto godkänner du våra användarvillkor och integritetspolicy.",
+			"workshop_signup": "Är du en verkstad? Registrera verkstad här",
+			"submitting": "Skapar konto..."
+		}
+	},
+	"upload": {
+		"title": "Ladda upp din inspektionsrapport",
+		"subtitle": "Steg 1 av 3 - Ladda upp din rapport och berätta om din bil",
+		"file_upload": {
+			"title": "Ladda upp filer",
+			"description": "Ladda upp din inspektionsrapport (JPG, PNG eller PDF). Max 5 filer, 10MB per fil.",
+			"drag_drop": "Dra och släpp filer här, eller klicka för att välja",
+			"file_types": "JPG, PNG, PDF upp till 10MB",
+			"uploaded_files": "Uppladdade filer:",
+			"drop_here": "Släpp filerna här..."
+		},
+		"vehicle_info": {
+			"title": "Bilinformation",
+			"description": "Berätta om din bil så att verkstäderna kan ge dig bättre erbjudanden",
+			"make": "Bilmärke",
+			"model": "Modell",
+			"year": "Årsmodell",
+			"year_label": "Årsmodell",
+			"make_placeholder": "Välj märke",
+			"model_placeholder": "t.ex. V70, Golf, X3"
+		},
+		"description": {"title": "Beskrivning", "description": "Beskriv vad som behöver fixas eller om du har några speciella önskemål", "placeholder": "Beskriv vad som behöver fixas på din bil..."},
+		"submit": "Skicka förfrågan",
+		"submitting": "Skickar förfrågan..."
+	},
+	"my_cases": {
+		"title": "Mina ärenden",
+		"subtitle": "Här ser du alla dina förfrågningar och deras status",
+		"new_request": "Ny förfrågan",
+		"loading": "Laddar...",
+		"loading_cases": "Laddar dina ärenden...",
+		"no_cases": {"title": "Inga ärenden än", "description": "Du har inte skickat några förfrågningar än. Börja med att ladda upp din inspektionsrapport.", "button": "Ladda upp rapport"},
+		"status": {"new": "Ny", "in_bidding": "Väntar på erbjudanden", "bidding_closed": "Erbjudanden klara", "booked": "Bokad", "completed": "Klar", "cancelled": "Avbruten"},
+		"vehicle_info": "Bilinformation",
+		"offers": "Erbjudanden",
+		"actions": "Åtgärder",
+		"see_details": "Se detaljer",
+		"choose_offer": "Välj erbjudande",
+		"leave_review": "Lämna recension",
+		"no_offers": "Inga erbjudanden än",
+		"more_offers": "fler erbjudanden",
+		"created": "Skapad",
+		"booked_for": "Bokad för",
+		"fetch_error": "Kunde inte hämta dina ärenden",
+		"year": "Årsmodell"
+	},
+	"offers_page": {
+		"title": "Erbjudanden",
+		"subtitle": "Jämför erbjudanden från verifierade verkstäder",
+		"sort_by": "Sortera efter",
+		"sort": {
+			"price": "Pris",
+			"distance": "Avstånd",
+			"rating": "Betyg"
+		},
+		"filter": {
+			"price": "Pris",
+			"distance": "Avstånd",
+			"rating": "Betyg",
+			"all": "Alla"
+		},
+		"verified": "Verifierad",
+		"incl_vat": "inkl. moms",
+		"warranty": "Garanti",
+		"view_details": "Se detaljer & boka",
+		"no_offers": "Inga erbjudanden tillgängliga än",
+		"no_request_id": "Inget förfrågnings-ID angivet",
+		"back_to_cases": "Tillbaka till mina ärenden",
+		"fetch_error": "Kunde inte hämta erbjudanden"
+	},
+	"offer_detail": {
+		"title": "Erbjudandedetaljer",
+		"book_now": "Boka nu",
+		"price": "Pris",
+		"incl_vat": "inkl. moms",
+		"estimated_duration": "Beräknad varaktighet",
+		"minutes": "minuter",
+		"distance": "Avstånd",
+		"km": "km",
+		"workshop_info": "Verkstadinformation",
+		"address": "Adress",
+		"phone": "Telefon",
+		"email": "E-post",
+		"rating": "Betyg",
+		"reviews": "recensioner",
+		"note": "Anteckning",
+		"warranty": "Garanti",
+		"available_times": "Tillgängliga tider",
+		"select_time": "Välj en tidslucka",
+		"booking_form": {
+			"title": "Slutför bokning",
+			"selected_time": "Vald tid",
+			"total_price": "Totalt pris",
+			"confirm": "Bekräfta bokning",
+			"cancellation_policy": "Annulleringspolicy",
+			"policy_text": "Gratis annullering upp till 24 timmar före mötet. Efter det kan ombokning vara tillgänglig.",
+			"success": "Bokning bekräftad!",
+			"error": "Kunde inte skapa bokning",
+			"fetch_error": "Kunde inte hämta erbjudande",
+			"not_found": "Erbjudande hittades inte",
+			"back_to_offers": "Tillbaka till erbjudanden",
+			"verified": "Fixa2an Verifierad"
+		}
+	},
+	"workshop": {
+		"dashboard": {
+			"title": "Verkstadsdashboard",
+			"subtitle": "Hantera dina förfrågningar och erbjudanden",
+			"stats": {"total_requests": "Totala förfrågningar", "active_offers": "Aktiva erbjudanden", "completed_jobs": "Genomförda jobb", "total_revenue": "Total omsättning"},
+			"requests": {"title": "Förfrågningar", "subtitle": "Nya förfrågningar som du kan skicka erbjudanden på", "no_requests": {"title": "Inga förfrågningar", "description": "Det finns inga nya förfrågningar just nu. Kom tillbaka senare."}}
+		},
+		"signup": {
+			"title": "Registrera din verkstad",
+			"subtitle": "Bli en del av vårt nätverk av verifierade verkstäder",
+			"personal_info": {"title": "Personlig information", "description": "Din kontaktinformation som verkstadsansvarig"},
+			"company_info": {"title": "Företagsinformation", "description": "Information om din verkstad"},
+			"opening_hours": {"title": "Öppettider", "description": "Ange dina öppettider"},
+			"brands": {"title": "Bilmärken", "description": "Välj vilka bilmärken du arbetar med"},
+			"documents": {"title": "Dokument", "description": "Ladda upp F-skattsedel, ansvarsförsäkring och andra relevanta dokument"},
+			"submit": "Skicka ansökan",
+			"submitting": "Skickar ansökan..."
+		}
+	},
+	"admin": {
+		"title": "Admin Panel",
+		"subtitle": "Hantera systemet och övervaka aktivitet",
+		"stats": {"customers": "Kunder", "workshops": "Verkstäder", "requests": "Förfrågningar", "monthly_revenue": "Månadsomsättning"},
+		"pending_workshops": {"title": "Verkstäder som väntar på godkännande", "subtitle": "Granska och godkänn nya verkstäder", "no_pending": {"title": "Alla verkstäder är godkända", "description": "Det finns inga verkstäder som väntar på godkännande."}, "approve": "Godkänn", "reject": "Avvisa", "see_details": "Se detaljer"}
+	},
+	"errors": {
+		"invalid_credentials": "Ogiltiga inloggningsuppgifter",
+		"generic_error": "Något gick fel. Försök igen.",
+		"email_required": "Ange din e-postadress",
+		"password_mismatch": "Lösenorden matchar inte",
+		"password_too_short": "Lösenordet måste vara minst 6 tecken",
+		"file_required": "Du måste ladda upp minst en fil",
+		"vehicle_info_required": "Fyll i bilens märke och modell",
+		"upload_failed": "Något gick fel vid uppladdningen. Försök igen.",
+		"registration_failed": "Något gick fel vid registreringen. Försök igen."
+	},
+	"success": {
+		"account_created": "Konto skapat",
+		"account_created_message": "Ditt konto har skapats. Logga in för att fortsätta.",
+		"request_sent": "Framgång! Din förfrågan har skickats. Du kommer att få erbjudanden inom 24 timmar.",
+		"registration_sent": "Registrering skickad",
+		"email_sent": "E-post skickat",
+		"workshop_approved": "Verkstad godkänd",
+		"workshop_rejected": "Verkstad avvisad"
+	},
+	"footer": {
+		"brand_tagline": "Hitta din verkstad enkelt och säkert.",
+		"for_customers": "För kunder",
+		"how_it_works": "Så fungerar det",
+		"faq": "Vanliga frågor",
+		"contact": "Kontakt",
+		"for_workshops": "För verkstäder",
+		"register_workshop": "Registrera verkstad",
+		"benefits": "Fördelar",
+		"legal": "Juridiskt",
+		"terms": "Villkor",
+		"privacy": "Integritet",
+		"cookies": "Cookies",
+		"copyright": "© 2024 Fixa2an. Alla rättigheter förbehållna."
+	}
+}

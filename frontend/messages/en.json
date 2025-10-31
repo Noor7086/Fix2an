@@ -1,0 +1,262 @@
+{
+	"common": {
+		"loading": "Loading...",
+		"error": "Error",
+		"success": "Success",
+		"cancel": "Cancel",
+		"save": "Save",
+		"delete": "Delete",
+		"edit": "Edit",
+		"view": "View",
+		"close": "Close",
+		"back": "Back",
+		"next": "Next",
+		"previous": "Previous",
+		"submit": "Submit",
+		"confirm": "Confirm",
+		"yes": "Yes",
+		"no": "No",
+		"required": "Required",
+		"optional": "Optional",
+		"or": "Or"
+	},
+	"navigation": {
+		"home": "Home",
+		"login": "Login",
+		"register": "Register",
+		"logout": "Logout",
+		"dashboard": "Dashboard",
+		"profile": "Profile",
+		"settings": "Settings",
+		"my_cases": "My Cases",
+		"upload": "Upload"
+	},
+	"homepage": {
+		"title": "Find your workshop easily",
+		"subtitle": "Upload your inspection report and get offers from verified workshops in your area. Compare prices, times and reviews - all in one place.",
+		"cta_primary": "Start here - Upload report",
+		"cta_secondary": "How it works",
+		"how_it_works": {
+			"title": "It's that simple",
+			"subtitle": "Three easy steps to your new workshop",
+			"step1": {
+				"title": "Upload report",
+				"description": "Upload your inspection report (JPG, PNG or PDF) and tell us what needs to be fixed."
+			},
+			"step2": {"title": "Get offers", "description": "Verified workshops in your area send offers with prices and times."},
+			"step3": {"title": "Book and pay", "description": "Choose the best offer, book a time and pay securely via Klarna."}
+		},
+		"features": {
+			"title": "Why choose Fixa2an?",
+			"verified": {"title": "Verified workshops", "description": "All workshops are checked and have valid certificates."},
+			"fast": {"title": "Fast offers", "description": "Get offers within 24 hours from workshops in your area."},
+			"transparent": {"title": "Transparent prices", "description": "Compare prices, times and reviews before you decide."},
+			"secure": {"title": "Secure payment", "description": "Pay securely via Klarna with all their payment options."}
+		},
+		"cta": {"title": "Ready to find your workshop?", "subtitle": "Upload your inspection report and get offers today", "button": "Start now - It's free"}
+	},
+	"auth": {
+		"signin": {
+			"title": "Sign in to your account",
+			"subtitle": "Or create a new account",
+			"email": "Email address",
+			"password": "Password",
+			"submit": "Sign in",
+			"magic_link": "Send login link via email",
+			"forgot_password": "Forgot your password?",
+			"workshop_signup": "Are you a workshop? Register here"
+		},
+		"signup": {
+			"title": "Create your account",
+			"subtitle": "Or sign in to your existing account",
+			"name": "Name",
+			"email": "Email address",
+			"phone": "Phone number",
+			"address": "Address",
+			"city": "City",
+			"postal_code": "Postal code",
+			"password": "Password",
+			"confirm_password": "Confirm password",
+			"submit": "Create account",
+			"terms": "By creating an account you agree to our terms of service and privacy policy.",
+			"workshop_signup": "Are you a workshop? Register workshop here",
+			"submitting": "Creating account..."
+		}
+	},
+	"upload": {
+		"title": "Upload your inspection report",
+		"subtitle": "Step 1 of 3 - Upload your report and tell us about your car",
+		"file_upload": {
+			"title": "Upload files",
+			"description": "Upload your inspection report (JPG, PNG or PDF). Max 5 files, 10MB per file.",
+			"drag_drop": "Drag and drop files here, or click to select",
+			"file_types": "JPG, PNG, PDF up to 10MB",
+			"uploaded_files": "Uploaded files:",
+			"drop_here": "Drop files here..."
+		},
+		"vehicle_info": {
+			"title": "Vehicle information",
+			"description": "Tell us about your car so workshops can give you better offers",
+			"make": "Car brand",
+			"model": "Model",
+			"year": "Year",
+			"year_label": "Model year",
+			"make_placeholder": "Select brand",
+			"model_placeholder": "e.g. V70, Golf, X3"
+		},
+		"description": {"title": "Description", "description": "Describe what needs to be fixed or if you have any special requests", "placeholder": "Describe what needs to be fixed on your car..."},
+		"submit": "Send request",
+		"submitting": "Sending request..."
+	},
+	"my_cases": {
+		"title": "My cases",
+		"subtitle": "Here you can see all your requests and their status",
+		"new_request": "New request",
+		"loading": "Loading...",
+		"loading_cases": "Loading your cases...",
+		"no_cases": {"title": "No cases yet", "description": "You haven't sent any requests yet. Start by uploading your inspection report.", "button": "Upload report"},
+		"status": {"new": "New", "in_bidding": "Waiting for offers", "bidding_closed": "Offers ready", "booked": "Booked", "completed": "Completed", "cancelled": "Cancelled"},
+		"vehicle_info": "Vehicle information",
+		"offers": "Offers",
+		"year": "Model year"
+	},
+	"offers_page": {
+		"title": "Offers",
+		"subtitle": "Compare offers from verified workshops",
+		"sort_by": "Sort by",
+		"sort": {
+			"price": "Price",
+			"distance": "Distance",
+			"rating": "Rating"
+		},
+		"filter": {
+			"price": "Price",
+			"distance": "Distance",
+			"rating": "Rating",
+			"all": "All"
+		},
+		"verified": "Verified",
+		"incl_vat": "incl. VAT",
+		"warranty": "Warranty",
+		"view_details": "View details & book",
+		"no_offers": "No offers available yet",
+		"no_request_id": "No request ID provided",
+		"back_to_cases": "Back to my cases",
+		"fetch_error": "Failed to fetch offers"
+	},
+	"offer_detail": {
+		"title": "Offer Details",
+		"book_now": "Book Now",
+		"price": "Price",
+		"incl_vat": "incl. VAT",
+		"estimated_duration": "Estimated duration",
+		"minutes": "minutes",
+		"distance": "Distance",
+		"km": "km",
+		"workshop_info": "Workshop Information",
+		"address": "Address",
+		"phone": "Phone",
+		"email": "Email",
+		"rating": "Rating",
+		"reviews": "reviews",
+		"note": "Note",
+		"warranty": "Warranty",
+		"available_times": "Available Times",
+		"select_time": "Select a time slot",
+		"booking_form": {
+			"title": "Complete Booking",
+			"selected_time": "Selected time",
+			"total_price": "Total price",
+			"confirm": "Confirm Booking",
+			"cancellation_policy": "Cancellation Policy",
+			"policy_text": "Free cancellation up to 24 hours before the appointment. After that, rescheduling may be available.",
+			"success": "Booking confirmed!",
+			"error": "Failed to create booking",
+			"fetch_error": "Failed to fetch offer",
+			"not_found": "Offer not found",
+			"back_to_offers": "Back to offers",
+			"verified": "Fixa2an Verified"
+		}
+	},
+	"my_cases": {
+		"title": "My cases",
+		"subtitle": "Here you can see all your requests and their status",
+		"new_request": "New request",
+		"loading": "Loading...",
+		"loading_cases": "Loading your cases...",
+		"no_cases": {"title": "No cases yet", "description": "You haven't sent any requests yet. Start by uploading your inspection report.", "button": "Upload report"},
+		"status": {"new": "New", "in_bidding": "Waiting for offers", "bidding_closed": "Offers ready", "booked": "Booked", "completed": "Completed", "cancelled": "Cancelled"},
+		"vehicle_info": "Vehicle information",
+		"offers": "Offers",
+		"actions": "Actions",
+		"see_details": "See details",
+		"choose_offer": "Choose offer",
+		"leave_review": "Leave review",
+		"no_offers": "No offers yet",
+		"more_offers": "more offers",
+		"created": "Created",
+		"booked_for": "Booked for",
+		"fetch_error": "Could not fetch your cases",
+		"year": "Model year"
+	},
+	"workshop": {
+		"dashboard": {
+			"title": "Workshop dashboard",
+			"subtitle": "Manage your requests and offers",
+			"stats": {"total_requests": "Total requests", "active_offers": "Active offers", "completed_jobs": "Completed jobs", "total_revenue": "Total revenue"},
+			"requests": {"title": "Requests", "subtitle": "New requests you can send offers for", "no_requests": {"title": "No requests", "description": "There are no new requests right now. Come back later."}}
+		},
+		"signup": {
+			"title": "Register your workshop",
+			"subtitle": "Become part of our network of verified workshops",
+			"personal_info": {"title": "Personal information", "description": "Your contact information as workshop manager"},
+			"company_info": {"title": "Company information", "description": "Information about your workshop"},
+			"opening_hours": {"title": "Opening hours", "description": "Enter your opening hours"},
+			"brands": {"title": "Car brands", "description": "Select which car brands you work with"},
+			"documents": {"title": "Documents", "description": "Upload F-tax certificate, liability insurance and other relevant documents"},
+			"submit": "Send application",
+			"submitting": "Sending application..."
+		}
+	},
+	"admin": {
+		"title": "Admin Panel",
+		"subtitle": "Manage the system and monitor activity",
+		"stats": {"customers": "Customers", "workshops": "Workshops", "requests": "Requests", "monthly_revenue": "Monthly revenue"},
+		"pending_workshops": {"title": "Workshops waiting for approval", "subtitle": "Review and approve new workshops", "no_pending": {"title": "All workshops are approved", "description": "There are no workshops waiting for approval."}, "approve": "Approve", "reject": "Reject", "see_details": "See details"}
+	},
+	"errors": {
+		"invalid_credentials": "Invalid login credentials",
+		"generic_error": "Something went wrong. Please try again.",
+		"email_required": "Enter your email address",
+		"password_mismatch": "Passwords do not match",
+		"password_too_short": "Password must be at least 6 characters",
+		"file_required": "You must upload at least one file",
+		"vehicle_info_required": "Fill in the car's make and model",
+		"upload_failed": "Something went wrong with the upload. Please try again.",
+		"registration_failed": "Something went wrong with the registration. Please try again."
+	},
+	"success": {
+		"account_created": "Account created",
+		"account_created_message": "Your account has been created. Please log in to continue.",
+		"request_sent": "Success! Your request has been sent. You will receive offers within 24 hours.",
+		"registration_sent": "Registration sent",
+		"email_sent": "Email sent",
+		"workshop_approved": "Workshop approved",
+		"workshop_rejected": "Workshop rejected"
+	},
+	"footer": {
+		"brand_tagline": "Find your workshop easily and safely.",
+		"for_customers": "For customers",
+		"how_it_works": "How it works",
+		"faq": "FAQ",
+		"contact": "Contact",
+		"for_workshops": "For workshops",
+		"register_workshop": "Register workshop",
+		"benefits": "Benefits",
+		"legal": "Legal",
+		"terms": "Terms",
+		"privacy": "Privacy",
+		"cookies": "Cookies",
+		"copyright": "© 2024 Fixa2an. All rights reserved."
+	}
+}
