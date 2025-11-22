@@ -145,8 +145,12 @@ router.get('/:id', async (req, res) => {
 		// Parse available dates
 		let availableDates = []
 		try {
-			availableDates = JSON.parse(offer.availableDates)
-		} catch {
+			if (offer.availableDates && offer.availableDates.trim() !== '') {
+				const parsed = JSON.parse(offer.availableDates)
+				availableDates = Array.isArray(parsed) ? parsed : []
+			}
+		} catch (error) {
+			console.error('Failed to parse availableDates:', error)
 			availableDates = []
 		}
 
@@ -158,6 +162,168 @@ router.get('/:id', async (req, res) => {
 	} catch (error) {
 		console.error('Fetch offer error:', error)
 		return res.status(500).json({ message: 'Failed to fetch offer' })
+	}
+})
+
+// Create a new offer
+router.post('/', async (req, res) => {
+	try {
+		const { requestId, workshopId, userId, price, note, estimatedDuration, warranty, availableDates } = req.body
+
+		// Resolve workshopId - if userId is provided, find the workshop by userId
+		let actualWorkshopId = workshopId
+
+		// If userId is provided (either as separate field or workshopId might be userId), find the workshop
+		const userIdentifier = userId || workshopId
+		
+		if (userIdentifier) {
+			// First check if it's already a workshop ID by trying to find the workshop directly
+			const workshopById = await prisma.workshop.findUnique({
+				where: { id: userIdentifier },
+			})
+
+			if (workshopById) {
+				actualWorkshopId = workshopById.id
+			} else {
+				// If not found as workshop ID, try to find by userId
+				const workshopByUserId = await prisma.workshop.findFirst({
+					where: { userId: userIdentifier },
+				})
+
+				if (workshopByUserId) {
+					actualWorkshopId = workshopByUserId.id
+				} else {
+					return res.status(404).json({ message: 'Workshop not found for this user' })
+				}
+			}
+		}
+
+		if (!requestId || !actualWorkshopId || !price || !estimatedDuration) {
+			return res.status(400).json({ message: 'Missing required fields: requestId, workshopId (or userId), price, estimatedDuration' })
+		}
+
+		// Verify workshop exists
+		const workshop = await prisma.workshop.findUnique({
+			where: { id: actualWorkshopId },
+		})
+
+		if (!workshop) {
+			return res.status(404).json({ message: 'Workshop not found' })
+		}
+
+		// Check if request exists and is in bidding
+		const request = await prisma.request.findUnique({
+			where: { id: requestId },
+		})
+
+		if (!request) {
+			return res.status(404).json({ message: 'Request not found' })
+		}
+
+		if (request.status !== 'IN_BIDDING') {
+			return res.status(400).json({ message: 'Request is not accepting offers' })
+		}
+
+		// Check if workshop already has an offer for this request
+		const existingOffer = await prisma.offer.findFirst({
+			where: {
+				requestId,
+				workshopId: actualWorkshopId,
+			},
+		})
+
+		if (existingOffer) {
+			return res.status(400).json({ message: 'You have already submitted an offer for this request' })
+		}
+
+		// Create offer
+		const offer = await prisma.offer.create({
+			data: {
+				requestId,
+				workshopId: actualWorkshopId,
+				price: parseFloat(String(price)),
+				note: note || '',
+				estimatedDuration: parseInt(String(estimatedDuration)),
+				warranty: warranty || '',
+				availableDates: availableDates ? JSON.stringify(availableDates) : '[]',
+				status: 'SENT',
+			},
+			include: {
+				request: {
+					include: {
+						vehicle: true,
+					},
+				},
+				workshop: {
+					select: {
+						id: true,
+						companyName: true,
+						rating: true,
+						reviewCount: true,
+					},
+				},
+			},
+		})
+
+		return res.status(201).json(offer)
+	} catch (error) {
+		console.error('Offer creation error:', error)
+		return res.status(500).json({ message: 'Failed to create offer' })
+	}
+})
+
+// Get all available requests for workshops (requests in IN_BIDDING status)
+router.get('/requests/available', async (req, res) => {
+	try {
+		const { workshopId, latitude, longitude, radius = 30 } = req.query
+
+		// Get all requests in bidding
+		let requests = await prisma.request.findMany({
+			where: {
+				status: 'IN_BIDDING',
+				expiresAt: {
+					gt: new Date(), // Not expired
+				},
+			},
+			include: {
+				vehicle: true,
+				customer: {
+					select: {
+						id: true,
+						name: true,
+						email: true,
+					},
+				},
+				offers: {
+					where: workshopId ? { workshopId: workshopId as string } : undefined,
+					select: {
+						id: true,
+						price: true,
+						status: true,
+					},
+				},
+			},
+			orderBy: {
+				createdAt: 'desc',
+			},
+		})
+
+		// Filter by distance if coordinates provided
+		if (latitude && longitude && requests.length > 0) {
+			const lat = parseFloat(String(latitude))
+			const lon = parseFloat(String(longitude))
+			const maxRadius = parseFloat(String(radius))
+
+			requests = requests.filter((request) => {
+				const distance = calculateDistance(lat, lon, request.latitude, request.longitude)
+				return distance <= maxRadius
+			})
+		}
+
+		return res.json(requests)
+	} catch (error) {
+		console.error('Fetch available requests error:', error)
+		return res.status(500).json({ message: 'Failed to fetch available requests' })
 	}
 })
 

@@ -72,16 +72,20 @@ export async function POST(request: NextRequest) {
 		// Hash password
 		const hashedPassword = await bcrypt.hash(password, 12)
 
-		// Create opening hours object
-		const openingHours = {
-			monday: { open: mondayOpen, close: mondayClose },
-			tuesday: { open: tuesdayOpen, close: tuesdayClose },
-			wednesday: { open: wednesdayOpen, close: wednesdayClose },
-			thursday: { open: thursdayOpen, close: thursdayClose },
-			friday: { open: fridayOpen, close: fridayClose },
-			saturday: { open: saturdayOpen, close: saturdayClose },
-			sunday: { open: sundayOpen, close: sundayClose },
+		// Create opening hours object and convert to JSON string
+		const openingHoursObj = {
+			monday: { open: mondayOpen || '', close: mondayClose || '' },
+			tuesday: { open: tuesdayOpen || '', close: tuesdayClose || '' },
+			wednesday: { open: wednesdayOpen || '', close: wednesdayClose || '' },
+			thursday: { open: thursdayOpen || '', close: thursdayClose || '' },
+			friday: { open: fridayOpen || '', close: fridayClose || '' },
+			saturday: { open: saturdayOpen || '', close: saturdayClose || '' },
+			sunday: { open: sundayOpen || '', close: sundayClose || '' },
 		}
+		const openingHoursJson = JSON.stringify(openingHoursObj)
+
+		// Convert brands array to comma-separated string
+		const brandsString = Array.isArray(brands) ? brands.join(',') : ''
 
 		// Create user and workshop in a transaction
 		const result = await prisma.$transaction(async (tx) => {
@@ -91,7 +95,7 @@ export async function POST(request: NextRequest) {
 					name,
 					email,
 					password: hashedPassword,
-					phone,
+					phone: phone || undefined,
 					role: 'WORKSHOP',
 				},
 			})
@@ -105,27 +109,31 @@ export async function POST(request: NextRequest) {
 					address,
 					city,
 					postalCode,
-					phone,
+					phone: phone || '',
 					email,
-					website,
-					description,
-					openingHours,
-					brandsHandled: brands,
+					website: website || undefined,
+					description: description || undefined,
+					openingHours: openingHoursJson,
+					brandsHandled: brandsString,
 					latitude: 0, // Will be geocoded later
 					longitude: 0, // Will be geocoded later
 				},
 			})
 
 			// Create workshop documents
-			for (const doc of documents) {
-				await tx.workshopDocument.create({
-					data: {
-						workshopId: workshop.id,
-						type: 'OTHER', // You might want to detect the type based on filename
-						fileName: doc.fileName,
-						fileUrl: doc.fileUrl,
-					},
-				})
+			if (documents && Array.isArray(documents) && documents.length > 0) {
+				for (const doc of documents) {
+					if (doc?.fileName && doc?.fileUrl) {
+						await tx.workshopDocument.create({
+							data: {
+								workshopId: workshop.id,
+								type: 'OTHER', // You might want to detect the type based on filename
+								fileName: doc.fileName,
+								fileUrl: doc.fileUrl,
+							},
+						})
+					}
+				}
 			}
 
 			return { user, workshop }
@@ -147,8 +155,18 @@ export async function POST(request: NextRequest) {
 			},
 			{ status: 201 },
 		)
-	} catch (error) {
+	} catch (error: any) {
 		console.error('Workshop registration error:', error)
-		return NextResponse.json({ message: 'Något gick fel vid registreringen' }, { status: 500 })
+		
+		// Provide more detailed error message
+		let errorMessage = 'Något gick fel vid registreringen'
+		
+		if (error?.code === 'P2002') {
+			errorMessage = 'E-postadress eller organisationsnummer finns redan'
+		} else if (error?.message) {
+			errorMessage = error.message
+		}
+		
+		return NextResponse.json({ message: errorMessage, error: error?.code || 'UNKNOWN' }, { status: 500 })
 	}
 }

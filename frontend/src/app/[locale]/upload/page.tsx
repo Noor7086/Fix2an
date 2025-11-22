@@ -37,7 +37,11 @@ export default function UploadPage() {
 	const { session, isLoading: isAuthLoading } = useRequireAuth()
 
 	const [files, setFiles] = useState<File[]>([])
-	const [vehicleData, setVehicleData] = useState({
+	const [vehicleData, setVehicleData] = useState<{
+		make: string
+		model: string
+		year: number
+	}>({
 		make: '',
 		model: '',
 		year: new Date().getFullYear(),
@@ -140,7 +144,8 @@ export default function UploadPage() {
 				})
 
 				if (!response.ok) {
-					throw new Error('File upload failed')
+					const errorData = await response.json().catch(() => ({ message: 'File upload failed' }))
+					throw new Error(errorData.message || 'File upload failed')
 				}
 
 				const result = await response.json()
@@ -157,7 +162,8 @@ export default function UploadPage() {
 			})
 
 			if (!vehicleResponse.ok) {
-				throw new Error('Vehicle creation failed')
+				const errorData = await vehicleResponse.json().catch(() => ({ message: 'Vehicle creation failed' }))
+				throw new Error(errorData.message || 'Vehicle creation failed')
 			}
 
 			const vehicle = await vehicleResponse.json()
@@ -174,31 +180,35 @@ export default function UploadPage() {
 			})
 
 			if (!reportResponse.ok) {
-				throw new Error('Report creation failed')
+				const errorData = await reportResponse.json().catch(() => ({ message: 'Report creation failed' }))
+				throw new Error(errorData.message || 'Report creation failed')
 			}
 
 			const report = await reportResponse.json()
 
-			// Create request
+			// Create request with default values if not provided
+			const requestBody = {
+				vehicleId: vehicle.id,
+				reportId: report.id,
+				description,
+				latitude: session?.user?.latitude || 59.3293, // Default to Stockholm
+				longitude: session?.user?.longitude || 18.0686,
+				address: session?.user?.address || 'Stockholm', // Default address
+				city: session?.user?.city || 'Stockholm', // Default city
+				postalCode: session?.user?.postalCode || '111 22', // Default postal code
+			}
+
 			const requestResponse = await fetch('/api/requests', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',
 				},
-				body: JSON.stringify({
-					vehicleId: vehicle.id,
-					reportId: report.id,
-					description,
-					latitude: session?.user?.latitude || 59.3293, // Default to Stockholm
-					longitude: session?.user?.longitude || 18.0686,
-					address: session?.user?.address || '',
-					city: session?.user?.city || '',
-					postalCode: session?.user?.postalCode || '',
-				}),
+				body: JSON.stringify(requestBody),
 			})
 
 			if (!requestResponse.ok) {
-				throw new Error('Request creation failed')
+				const errorData = await requestResponse.json().catch(() => ({ message: 'Request creation failed' }))
+				throw new Error(errorData.message || 'Request creation failed')
 			}
 
 			const request = await requestResponse.json()
@@ -209,11 +219,12 @@ export default function UploadPage() {
 			})
 
 			router.push(`/${locale}/my-cases`)
-		} catch (error) {
+		} catch (error: any) {
 			console.error('Upload error:', error)
+			const errorMessage = error?.message || tErrors('upload_failed')
 			toast({
 				title: tCommon('error'),
-				description: tErrors('upload_failed'),
+				description: errorMessage,
 				variant: 'destructive',
 			})
 		} finally {
@@ -341,18 +352,20 @@ export default function UploadPage() {
 								<div>
 									<Label htmlFor="make">{t('vehicle_info.make')}</Label>
 									<Select
-										value={vehicleData.make}
+										value={vehicleData.make || undefined}
 										onValueChange={(value) => setVehicleData((prev) => ({ ...prev, make: value }))}
 									>
 										<SelectTrigger>
 											<SelectValue placeholder={t('vehicle_info.make_placeholder')} />
 										</SelectTrigger>
 										<SelectContent>
-											{carMakes.map((make) => (
-												<SelectItem key={make} value={make}>
-													{make}
-												</SelectItem>
-											))}
+											{carMakes
+												.filter((make) => make.trim() !== '')
+												.map((make) => (
+													<SelectItem key={make} value={make}>
+														{make}
+													</SelectItem>
+												))}
 										</SelectContent>
 									</Select>
 								</div>

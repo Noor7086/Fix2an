@@ -11,6 +11,7 @@ import { useToast } from '@/hooks/use-toast'
 import { useTranslations, useLocale } from 'next-intl'
 import { useRedirectIfAuthenticated } from '@/hooks/use-auth-redirect'
 import { Navbar } from '@/components/navbar'
+import { Eye, EyeOff } from 'lucide-react'
 
 export default function SignUpPage() {
 	const [formData, setFormData] = useState({
@@ -24,6 +25,8 @@ export default function SignUpPage() {
 		postalCode: '',
 	})
 	const [isLoading, setIsLoading] = useState(false)
+	const [showPassword, setShowPassword] = useState(false)
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 	const router = useRouter()
 	const { toast } = useToast()
 	const t = useTranslations('auth.signup')
@@ -150,11 +153,29 @@ export default function SignUpPage() {
 								</div>
 								<div>
 									<Label htmlFor="password">{t('password')}</Label>
-									<Input id="password" name="password" type="password" value={formData.password} onChange={handleChange} required placeholder={t('password')} />
+									<div className="relative">
+										<Input id="password" name="password" type={showPassword ? 'text' : 'password'} value={formData.password} onChange={handleChange} required placeholder={t('password')} className="pr-10" />
+										<button
+											type="button"
+											onClick={() => setShowPassword(!showPassword)}
+											className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+										>
+											{showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+										</button>
+									</div>
 								</div>
 								<div>
 									<Label htmlFor="confirmPassword">{t('confirm_password')}</Label>
-									<Input id="confirmPassword" name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} required placeholder={t('confirm_password')} />
+									<div className="relative">
+										<Input id="confirmPassword" name="confirmPassword" type={showConfirmPassword ? 'text' : 'password'} value={formData.confirmPassword} onChange={handleChange} required placeholder={t('confirm_password')} className="pr-10" />
+										<button
+											type="button"
+											onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+											className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+										>
+											{showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+										</button>
+									</div>
 								</div>
 								<Button type="submit" className="w-full" disabled={isLoading}>
 									{isLoading ? t('submitting') : t('submit')}

@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { useToast } from '@/hooks/use-toast'
 import { formatPrice, formatDate, formatDateTime } from '@/lib/utils'
+import { useLocale, useTranslations } from 'next-intl'
 import {
 	Car,
 	MapPin,
@@ -23,6 +25,7 @@ import {
 	Users,
 	DollarSign,
 } from 'lucide-react'
+import { Navbar } from '@/components/navbar'
 
 interface Request {
 	id: string
@@ -64,6 +67,10 @@ export default function WorkshopDashboardPage() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
 	const { toast } = useToast()
+	const locale = useLocale()
+	const t = useTranslations('workshop.dashboard')
+	const tCommon = useTranslations('common')
+	const tErrors = useTranslations('errors')
 	const [requests, setRequests] = useState<Request[]>([])
 	const [stats, setStats] = useState<WorkshopStats>({
 		totalRequests: 0,
@@ -73,24 +80,10 @@ export default function WorkshopDashboardPage() {
 	})
 	const [loading, setLoading] = useState(true)
 
-	// Redirect if not authenticated or not a workshop
-	if (status === 'loading') {
-		return <div className="min-h-screen flex items-center justify-center">Laddar...</div>
-	}
-
-	if (!session || session.user.role !== 'WORKSHOP') {
-		router.push('/auth/signin')
-		return null
-	}
-
-	useEffect(() => {
-		fetchData()
-	}, [])
-
 	const fetchData = async () => {
 		try {
 			const [requestsResponse, statsResponse] = await Promise.all([
-				fetch('/api/requests'),
+				fetch('/api/requests/available'), // Fetch available requests for workshops
 				fetch('/api/workshop/stats'),
 			])
 
@@ -106,8 +99,8 @@ export default function WorkshopDashboardPage() {
 		} catch (error) {
 			console.error('Failed to fetch data:', error)
 			toast({
-				title: 'Fel',
-				description: 'Kunde inte hämta data',
+				title: tCommon('error'),
+				description: tErrors('fetch_failed'),
 				variant: 'destructive',
 			})
 		} finally {
@@ -115,22 +108,63 @@ export default function WorkshopDashboardPage() {
 		}
 	}
 
+	// Fetch data only if authenticated and workshop
+	useEffect(() => {
+		if (status === 'authenticated' && session?.user?.role === 'WORKSHOP') {
+			fetchData()
+		} else if (status === 'unauthenticated') {
+			router.push(`/${locale}/auth/signin`)
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [status, session?.user?.role, locale])
+
+	// Redirect if not authenticated or not a workshop
+	if (status === 'loading') {
+		return <div className="min-h-screen flex items-center justify-center">{tCommon('loading')}</div>
+	}
+
+	if (!session || session.user.role !== 'WORKSHOP') {
+		return null
+	}
+
 	const getStatusBadge = (status: string) => {
 		const statusMap = {
-			NEW: { label: 'Ny', variant: 'default' as const },
-			IN_BIDDING: { label: 'Öppen för bud', variant: 'secondary' as const },
-			BIDDING_CLOSED: { label: 'Stängd', variant: 'outline' as const },
-			BOOKED: { label: 'Bokad', variant: 'default' as const },
-			COMPLETED: { label: 'Klar', variant: 'default' as const },
-			CANCELLED: { label: 'Avbruten', variant: 'destructive' as const },
+			NEW: {
+				label: t('status.new'),
+				className: 'bg-blue-100 text-blue-800 border-blue-200 border',
+			},
+			IN_BIDDING: {
+				label: t('status.in_bidding'),
+				className: 'bg-yellow-100 text-yellow-800 border-yellow-200 border',
+			},
+			BIDDING_CLOSED: {
+				label: t('status.bidding_closed'),
+				className: 'bg-green-100 text-green-800 border-green-200 border',
+			},
+			BOOKED: {
+				label: t('status.booked'),
+				className: 'bg-purple-100 text-purple-800 border-purple-200 border',
+			},
+			COMPLETED: {
+				label: t('status.completed'),
+				className: 'bg-emerald-100 text-emerald-800 border-emerald-200 border',
+			},
+			CANCELLED: {
+				label: t('status.cancelled'),
+				className: 'bg-red-100 text-red-800 border-red-200 border',
+			},
 		}
 
 		const statusInfo = statusMap[status as keyof typeof statusMap] || {
 			label: status,
-			variant: 'default' as const,
+			className: 'bg-gray-100 text-gray-800 border-gray-200 border',
 		}
 
-		return <Badge variant={statusInfo.variant}>{statusInfo.label}</Badge>
+		return (
+			<Badge className={`${statusInfo.className} font-semibold px-3 py-1`}>
+				{statusInfo.label}
+			</Badge>
+		)
 	}
 
 	const getStatusIcon = (status: string) => {
@@ -153,150 +187,226 @@ export default function WorkshopDashboardPage() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen flex items-center justify-center">
-				<div className="text-center">
-					<div className="spinner mx-auto mb-4"></div>
-					<p>Laddar dashboard...</p>
+			<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 flex items-center justify-center">
+				<Navbar />
+				<div className="text-center space-y-4">
+					<div className="relative">
+						<div className="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin mx-auto"></div>
+						<Car className="w-10 h-10 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-primary" />
+					</div>
+					<p className="text-gray-600 font-medium text-lg">{t('loading')}</p>
 				</div>
 			</div>
 		)
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50 py-8">
-			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+			<Navbar />
+			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+				{/* Header */}
 				<div className="mb-8">
-					<h1 className="text-3xl font-bold text-gray-900">Verkstadsdashboard</h1>
-					<p className="text-gray-600 mt-2">Hantera dina förfrågningar och erbjudanden</p>
+					<div className="flex items-center justify-between">
+						<div>
+							<h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+								{t('title')}
+							</h1>
+							<p className="text-gray-600 mt-2 text-lg">{t('subtitle')}</p>
+						</div>
+					</div>
 				</div>
 
 				{/* Stats Cards */}
-				<div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-					<Card>
-						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-							<CardTitle className="text-sm font-medium">Totala förfrågningar</CardTitle>
-							<Users className="h-4 w-4 text-muted-foreground" />
+				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+					<Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-blue-50 to-blue-100">
+						<div className="absolute top-0 right-0 w-32 h-32 bg-blue-200 rounded-full blur-3xl opacity-50"></div>
+						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+							<CardTitle className="text-sm font-semibold text-blue-900">{t('stats.total_requests')}</CardTitle>
+							<div className="p-2 bg-blue-500 rounded-lg">
+								<Users className="h-5 w-5 text-white" />
+							</div>
 						</CardHeader>
-						<CardContent>
-							<div className="text-2xl font-bold">{stats.totalRequests}</div>
-							<p className="text-xs text-muted-foreground">+12% från förra månaden</p>
+						<CardContent className="relative z-10">
+							<div className="text-3xl font-bold text-blue-900 mb-1">{stats.totalRequests}</div>
+							<p className="text-xs text-blue-700 font-medium">{t('stats.total_requests_desc')}</p>
 						</CardContent>
 					</Card>
 
-					<Card>
-						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-							<CardTitle className="text-sm font-medium">Aktiva erbjudanden</CardTitle>
-							<TrendingUp className="h-4 w-4 text-muted-foreground" />
+					<Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-green-50 to-green-100">
+						<div className="absolute top-0 right-0 w-32 h-32 bg-green-200 rounded-full blur-3xl opacity-50"></div>
+						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+							<CardTitle className="text-sm font-semibold text-green-900">{t('stats.active_offers')}</CardTitle>
+							<div className="p-2 bg-green-500 rounded-lg">
+								<TrendingUp className="h-5 w-5 text-white" />
+							</div>
 						</CardHeader>
-						<CardContent>
-							<div className="text-2xl font-bold">{stats.activeOffers}</div>
-							<p className="text-xs text-muted-foreground">Väntar på svar</p>
+						<CardContent className="relative z-10">
+							<div className="text-3xl font-bold text-green-900 mb-1">{stats.activeOffers}</div>
+							<p className="text-xs text-green-700 font-medium">{t('stats.active_offers_desc')}</p>
 						</CardContent>
 					</Card>
 
-					<Card>
-						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-							<CardTitle className="text-sm font-medium">Genomförda jobb</CardTitle>
-							<CheckCircle className="h-4 w-4 text-muted-foreground" />
+					<Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-purple-50 to-purple-100">
+						<div className="absolute top-0 right-0 w-32 h-32 bg-purple-200 rounded-full blur-3xl opacity-50"></div>
+						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+							<CardTitle className="text-sm font-semibold text-purple-900">{t('stats.completed_jobs')}</CardTitle>
+							<div className="p-2 bg-purple-500 rounded-lg">
+								<CheckCircle className="h-5 w-5 text-white" />
+							</div>
 						</CardHeader>
-						<CardContent>
-							<div className="text-2xl font-bold">{stats.completedJobs}</div>
-							<p className="text-xs text-muted-foreground">Denna månad</p>
+						<CardContent className="relative z-10">
+							<div className="text-3xl font-bold text-purple-900 mb-1">{stats.completedJobs}</div>
+							<p className="text-xs text-purple-700 font-medium">{t('stats.completed_jobs_desc')}</p>
 						</CardContent>
 					</Card>
 
-					<Card>
-						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-							<CardTitle className="text-sm font-medium">Total omsättning</CardTitle>
-							<DollarSign className="h-4 w-4 text-muted-foreground" />
+					<Card className="relative overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 bg-gradient-to-br from-amber-50 to-amber-100">
+						<div className="absolute top-0 right-0 w-32 h-32 bg-amber-200 rounded-full blur-3xl opacity-50"></div>
+						<CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+							<CardTitle className="text-sm font-semibold text-amber-900">{t('stats.total_revenue')}</CardTitle>
+							<div className="p-2 bg-amber-500 rounded-lg">
+								<DollarSign className="h-5 w-5 text-white" />
+							</div>
 						</CardHeader>
-						<CardContent>
-							<div className="text-2xl font-bold">{formatPrice(stats.totalRevenue)}</div>
-							<p className="text-xs text-muted-foreground">Denna månad</p>
+						<CardContent className="relative z-10">
+							<div className="text-3xl font-bold text-amber-900 mb-1">{formatPrice(stats.totalRevenue)}</div>
+							<p className="text-xs text-amber-700 font-medium">{t('stats.total_revenue_desc')}</p>
 						</CardContent>
 					</Card>
 				</div>
 
 				{/* Requests */}
-				<Card>
-					<CardHeader>
-						<CardTitle>Förfrågningar</CardTitle>
-						<CardDescription>Nya förfrågningar som du kan skicka erbjudanden på</CardDescription>
+				<Card className="shadow-xl border-0">
+					<CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 border-b">
+						<div className="flex justify-between items-center">
+							<div>
+								<CardTitle className="text-2xl font-bold text-gray-900">{t('requests.title')}</CardTitle>
+								<CardDescription className="text-gray-600 mt-1">{t('requests.subtitle')}</CardDescription>
+							</div>
+							<Link href={`/${locale}/workshop/requests`}>
+								<Button variant="outline" size="sm" className="shadow-md hover:shadow-lg transition-shadow">
+									<Eye className="w-4 h-4 mr-2" />
+									{t('requests.view_all')}
+								</Button>
+							</Link>
+						</div>
 					</CardHeader>
-					<CardContent>
+					<CardContent className="p-6">
 						{requests.length === 0 ? (
-							<div className="text-center py-8">
-								<Car className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-								<h3 className="text-lg font-semibold mb-2">Inga förfrågningar</h3>
-								<p className="text-gray-600">
-									Det finns inga nya förfrågningar just nu. Kom tillbaka senare.
+							<div className="text-center py-16">
+								<div className="relative inline-block">
+									<div className="absolute inset-0 bg-blue-200 rounded-full blur-2xl opacity-30"></div>
+									<Car className="w-20 h-20 mx-auto mb-6 text-gray-400 relative z-10" />
+								</div>
+								<h3 className="text-xl font-semibold mb-2 text-gray-900">{t('requests.no_requests.title')}</h3>
+								<p className="text-gray-600 max-w-md mx-auto">
+									{t('requests.no_requests.description')}
 								</p>
 							</div>
 						) : (
 							<div className="space-y-4">
 								{requests.map((request) => (
-									<div key={request.id} className="border rounded-lg p-4">
-										<div className="flex justify-between items-start mb-4">
-											<div>
-												<h3 className="font-semibold flex items-center gap-2">
-													{getStatusIcon(request.status)}
-													{request.vehicle.make} {request.vehicle.model} {request.vehicle.year}
-												</h3>
-												<p className="text-sm text-gray-600">
-													Från {request.customer.name} • {formatDate(new Date(request.createdAt))}
-												</p>
+									<div
+										key={request.id}
+										className="border-2 rounded-xl p-6 bg-white hover:shadow-lg transition-all duration-300 hover:border-primary/50"
+									>
+										<div className="flex justify-between items-start mb-6">
+											<div className="flex-1">
+												<div className="flex items-center gap-3 mb-2">
+													<div className="p-2 bg-blue-100 rounded-lg">
+														{getStatusIcon(request.status)}
+													</div>
+													<h3 className="text-xl font-bold text-gray-900">
+														{request.vehicle.make} {request.vehicle.model} {request.vehicle.year}
+													</h3>
+												</div>
+												<div className="flex items-center gap-2 text-sm text-gray-600 ml-12">
+													<Users className="w-4 h-4" />
+													<span>{t('requests.from')} {request.customer.name}</span>
+													<span>•</span>
+													<Clock className="w-4 h-4" />
+													<span>{formatDate(new Date(request.createdAt))}</span>
+												</div>
 											</div>
-											{getStatusBadge(request.status)}
+											<div className="ml-4">
+												{getStatusBadge(request.status)}
+											</div>
 										</div>
 
-										<div className="grid md:grid-cols-3 gap-4">
-											<div>
-												<h4 className="font-medium text-sm mb-1">Bilinformation</h4>
+										<div className="grid md:grid-cols-3 gap-6 pt-4 border-t">
+											<div className="space-y-2">
+												<div className="flex items-center gap-2 mb-2">
+													<Car className="w-4 h-4 text-blue-600" />
+													<h4 className="font-semibold text-sm text-gray-900">{t('requests.vehicle_info')}</h4>
+												</div>
+												<p className="text-sm font-medium text-gray-900">
+													{request.vehicle.make} {request.vehicle.model}
+												</p>
 												<p className="text-sm text-gray-600">
-													{request.vehicle.make} {request.vehicle.model} {request.vehicle.year}
+													{t('requests.year')}: {request.vehicle.year}
 												</p>
 												{request.description && (
-													<p className="text-sm text-gray-600 mt-1">{request.description}</p>
+													<p className="text-sm text-gray-600 mt-2 p-2 bg-gray-50 rounded-md">
+														{request.description}
+													</p>
 												)}
 											</div>
 
-											<div>
-												<h4 className="font-medium text-sm mb-1">Kundinformation</h4>
-												<p className="text-sm text-gray-600">{request.customer.name}</p>
+											<div className="space-y-2">
+												<div className="flex items-center gap-2 mb-2">
+													<Users className="w-4 h-4 text-green-600" />
+													<h4 className="font-semibold text-sm text-gray-900">{t('requests.customer_info')}</h4>
+												</div>
+												<p className="text-sm font-medium text-gray-900">{request.customer.name}</p>
 												<p className="text-sm text-gray-600">{request.customer.email}</p>
 												{request.customer.phone && (
 													<p className="text-sm text-gray-600">{request.customer.phone}</p>
 												)}
 											</div>
 
-											<div>
-												<h4 className="font-medium text-sm mb-1">Åtgärder</h4>
+											<div className="space-y-3">
+												<h4 className="font-semibold text-sm text-gray-900 mb-2">{t('requests.actions')}</h4>
 												<div className="space-y-2">
-													<Button variant="outline" size="sm" className="w-full">
-														<Eye className="w-4 h-4 mr-2" />
-														Se detaljer
-													</Button>
-
-													{request.status === 'IN_BIDDING' && (
-														<Button size="sm" className="w-full">
-															Skicka erbjudande
-														</Button>
+													{request.status === 'IN_BIDDING' && !request.offers.length && (
+														<Link href={`/${locale}/workshop/requests/${request.id}/offer`} className="block">
+															<Button size="sm" className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md">
+																<MessageSquare className="w-4 h-4 mr-2" />
+																{t('requests.send_offer')}
+															</Button>
+														</Link>
+													)}
+													{request.status === 'IN_BIDDING' && request.offers.length > 0 && (
+														<Link href={`/${locale}/workshop/requests`} className="block">
+															<Button variant="outline" size="sm" className="w-full">
+																<Eye className="w-4 h-4 mr-2" />
+																{t('requests.view_my_offer')}
+															</Button>
+														</Link>
 													)}
 
 													{request.offers.length > 0 && (
-														<div className="text-sm">
-															<p className="font-medium">Ditt erbjudande:</p>
-															<p className="text-gray-600">
+														<div className="p-3 bg-green-50 rounded-lg border border-green-200">
+															<p className="text-xs font-semibold text-green-900 mb-1">{t('requests.your_offer')}</p>
+															<p className="text-lg font-bold text-green-700 mb-2">
 																{formatPrice(request.offers[0].price)}
 															</p>
 															<Badge
-																variant={
-																	request.offers[0].status === 'ACCEPTED' ? 'default' : 'secondary'
+																className={
+																	request.offers[0].status === 'ACCEPTED'
+																		? 'bg-green-600 text-white'
+																		: 'bg-yellow-100 text-yellow-800 border-yellow-300'
 																}
 															>
-																{request.offers[0].status === 'ACCEPTED' ? 'Accepterat' : 'Väntar'}
+																{request.offers[0].status === 'ACCEPTED' ? t('requests.offer_accepted') : t('requests.offer_pending')}
 															</Badge>
 														</div>
+													)}
+
+													{request.status === 'IN_BIDDING' && request.offers.length === 0 && (
+														<Button variant="outline" size="sm" className="w-full">
+															<Eye className="w-4 h-4 mr-2" />
+															{t('requests.view_details')}
+														</Button>
 													)}
 												</div>
 											</div>

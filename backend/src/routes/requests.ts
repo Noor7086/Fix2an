@@ -9,7 +9,18 @@ router.post('/', async (req, res) => {
 		const { vehicleId, reportId, description, latitude, longitude, address, city, postalCode, customerId } = req.body
 
 		if (!vehicleId || !reportId || !latitude || !longitude || !address || !city || !customerId) {
-			return res.status(400).json({ message: 'Missing required fields' })
+			return res.status(400).json({ 
+				message: 'Missing required fields',
+				missing: {
+					vehicleId: !vehicleId,
+					reportId: !reportId,
+					latitude: !latitude,
+					longitude: !longitude,
+					address: !address,
+					city: !city,
+					customerId: !customerId
+				}
+			})
 		}
 
 		// Set expiry to 48 hours from now (offers expire after 48h)

@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
 	try {
 		const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000'
+		const { id } = params
 
-		const response = await fetch(`${backendUrl}/api/offers/${params.id}`, {
+		const response = await fetch(`${backendUrl}/api/offers/${id}`, {
 			method: 'GET',
 		})
 
@@ -15,5 +18,3 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 		return NextResponse.json({ message: 'Failed to connect to backend' }, { status: 500 })
 	}
 }
-
-

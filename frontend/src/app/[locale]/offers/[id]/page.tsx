@@ -77,6 +77,10 @@ export default function OfferDetailPage() {
 			const response = await fetch(`/api/offers/${offerId}`)
 			if (response.ok) {
 				const data = await response.json()
+				// Ensure availableDates is always an array
+				if (!data.availableDates || !Array.isArray(data.availableDates)) {
+					data.availableDates = []
+				}
 				setOffer(data)
 				if (data.availableDates && data.availableDates.length > 0) {
 					setSelectedTime(data.availableDates[0])
@@ -297,18 +301,24 @@ export default function OfferDetailPage() {
 							<CardContent className="space-y-4">
 								<div>
 									<label className="text-sm font-medium mb-2 block">{t('available_times')}</label>
-									<Select value={selectedTime} onValueChange={setSelectedTime}>
-										<SelectTrigger>
-											<SelectValue placeholder={t('select_time')} />
-										</SelectTrigger>
-										<SelectContent>
-											{offer.availableDates.map((date) => (
-												<SelectItem key={date} value={date}>
-													{formatDateTime(new Date(date))}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
+									{offer.availableDates && offer.availableDates.length > 0 ? (
+										<Select value={selectedTime} onValueChange={setSelectedTime}>
+											<SelectTrigger>
+												<SelectValue placeholder={t('select_time')} />
+											</SelectTrigger>
+											<SelectContent>
+												{offer.availableDates.map((date) => (
+													<SelectItem key={date} value={date}>
+														{formatDateTime(new Date(date))}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									) : (
+										<div className="p-3 bg-yellow-50 border border-yellow-200 rounded-md">
+											<p className="text-sm text-yellow-800">{t('no_available_times') || 'No available times for this offer. Please contact the workshop.'}</p>
+										</div>
+									)}
 								</div>
 
 								<div className="pt-4 border-t">
@@ -322,7 +332,7 @@ export default function OfferDetailPage() {
 								<Button
 									className="w-full"
 									onClick={handleBooking}
-									disabled={!selectedTime || isBooking}
+									disabled={!selectedTime || isBooking || !offer.availableDates || offer.availableDates.length === 0}
 								>
 									{isBooking ? tCommon('loading') : t('booking_form.confirm')}
 								</Button>

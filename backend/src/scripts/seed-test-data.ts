@@ -6,6 +6,22 @@ const prisma = new PrismaClient()
 async function main() {
 	console.log('🌱 Seeding test data...')
 
+	// Create admin user
+	const adminPassword = await bcrypt.hash('admin@123', 12)
+	const admin = await prisma.user.upsert({
+		where: { email: 'admin@gmail.com' },
+		update: {},
+		create: {
+			email: 'admin@gmail.com',
+			name: 'Admin User',
+			password: adminPassword,
+			role: 'ADMIN',
+			isActive: true,
+			emailVerified: new Date(),
+		},
+	})
+	console.log('✅ Created admin:', admin.email)
+
 	// Create test customer
 	const hashedPassword = await bcrypt.hash('password123', 12)
 	const customer = await prisma.user.upsert({
@@ -256,6 +272,7 @@ async function main() {
 
 	console.log('\n✨ Test data seeding complete!')
 	console.log('\n📝 Test Credentials:')
+	console.log('Admin: admin@gmail.com / admin@123')
 	console.log('Customer: customer@test.com / password123')
 	console.log('Workshop: workshop@test.com / password123')
 	console.log('Workshop 2: workshop2@test.com / password123')

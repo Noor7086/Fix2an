@@ -17,12 +17,19 @@ import {
 	SelectValue,
 } from '@/components/ui/select'
 import { useToast } from '@/hooks/use-toast'
-import { Upload, File, X, Building2, Clock } from 'lucide-react'
+import { Upload, File, X, Building2, Clock, Eye, EyeOff } from 'lucide-react'
 import { validateFile, getFileIcon } from '@/lib/utils'
+import { useTranslations, useLocale } from 'next-intl'
+import { Navbar } from '@/components/navbar'
 
 export default function WorkshopSignupPage() {
 	const router = useRouter()
 	const { toast } = useToast()
+	const t = useTranslations('workshop.signup')
+	const tCommon = useTranslations('common')
+	const tErrors = useTranslations('errors')
+	const tSuccess = useTranslations('success')
+	const locale = useLocale()
 
 	const [formData, setFormData] = useState({
 		// User info
@@ -63,6 +70,8 @@ export default function WorkshopSignupPage() {
 
 	const [documents, setDocuments] = useState<File[]>([])
 	const [isSubmitting, setIsSubmitting] = useState(false)
+	const [showPassword, setShowPassword] = useState(false)
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
 	const carBrands = [
 		'Volvo',
@@ -107,7 +116,7 @@ export default function WorkshopSignupPage() {
 				validFiles.push(file)
 			} else {
 				toast({
-					title: 'Ogiltig fil',
+					title: tCommon('error'),
 					description: validation.error,
 					variant: 'destructive',
 				})
@@ -153,8 +162,8 @@ export default function WorkshopSignupPage() {
 
 		if (formData.password !== formData.confirmPassword) {
 			toast({
-				title: 'Fel',
-				description: 'Lösenorden matchar inte',
+				title: tCommon('error'),
+				description: tErrors('password_mismatch'),
 				variant: 'destructive',
 			})
 			setIsSubmitting(false)
@@ -163,8 +172,8 @@ export default function WorkshopSignupPage() {
 
 		if (documents.length === 0) {
 			toast({
-				title: 'Fel',
-				description: 'Du måste ladda upp minst ett dokument (F-skattsedel eller ansvarsförsäkring)',
+				title: tCommon('error'),
+				description: tErrors('documents_required'),
 				variant: 'destructive',
 			})
 			setIsSubmitting(false)
@@ -209,24 +218,23 @@ export default function WorkshopSignupPage() {
 
 			if (response.ok) {
 				toast({
-					title: 'Registrering skickad',
-					description:
-						'Din ansökan har skickats. Vi kommer att granska den och kontakta dig snart.',
+					title: t('registration_sent'),
+					description: t('registration_sent_message'),
 				})
-				router.push('/auth/signin')
+				router.push(`/${locale}/auth/signin`)
 			} else {
 				const error = await response.json()
 				toast({
-					title: 'Fel',
-					description: error.message || 'Något gick fel',
+					title: tCommon('error'),
+					description: error.message || tErrors('generic_error'),
 					variant: 'destructive',
 				})
 			}
 		} catch (error) {
 			console.error('Registration error:', error)
 			toast({
-				title: 'Fel',
-				description: 'Något gick fel vid registreringen. Försök igen.',
+				title: tCommon('error'),
+				description: tErrors('registration_failed'),
 				variant: 'destructive',
 			})
 		} finally {
@@ -235,40 +243,36 @@ export default function WorkshopSignupPage() {
 	}
 
 	return (
-		<div className="min-h-screen bg-gray-50 py-8">
-			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+		<div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50">
+			<Navbar />
+			<div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 				<div className="text-center mb-8">
-					<Link href="/" className="text-3xl font-bold text-primary">
-						Fixa2an
-					</Link>
-					<h1 className="text-3xl font-bold text-gray-900 mt-4">Registrera din verkstad</h1>
-					<p className="text-lg text-gray-600 mt-2">
-						Bli en del av vårt nätverk av verifierade verkstäder
-					</p>
+					<h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{t('title')}</h1>
+					<p className="text-lg text-gray-600">{t('subtitle')}</p>
 				</div>
 
 				<form onSubmit={handleSubmit} className="space-y-8">
 					{/* Personal Information */}
 					<Card>
 						<CardHeader>
-							<CardTitle>Personlig information</CardTitle>
-							<CardDescription>Din kontaktinformation som verkstadsansvarig</CardDescription>
+							<CardTitle>{t('personal_info.title')}</CardTitle>
+							<CardDescription>{t('personal_info.description')}</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-4">
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div>
-									<Label htmlFor="name">Namn</Label>
+									<Label htmlFor="name">{t('personal_info.name')}</Label>
 									<Input
 										id="name"
 										name="name"
 										value={formData.name}
 										onChange={handleInputChange}
 										required
-										placeholder="Ditt fullständiga namn"
+										placeholder={t('personal_info.name_placeholder')}
 									/>
 								</div>
 								<div>
-									<Label htmlFor="email">E-postadress</Label>
+									<Label htmlFor="email">{t('personal_info.email')}</Label>
 									<Input
 										id="email"
 										name="email"
@@ -276,13 +280,13 @@ export default function WorkshopSignupPage() {
 										value={formData.email}
 										onChange={handleInputChange}
 										required
-										placeholder="din@epost.se"
+										placeholder={t('personal_info.email_placeholder')}
 									/>
 								</div>
 							</div>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div>
-									<Label htmlFor="phone">Telefonnummer</Label>
+									<Label htmlFor="phone">{t('personal_info.phone')}</Label>
 									<Input
 										id="phone"
 										name="phone"
@@ -290,45 +294,65 @@ export default function WorkshopSignupPage() {
 										value={formData.phone}
 										onChange={handleInputChange}
 										required
-										placeholder="070-123 45 67"
+										placeholder={t('personal_info.phone_placeholder')}
 									/>
 								</div>
 								<div>
-									<Label htmlFor="website">Webbplats (valfritt)</Label>
+									<Label htmlFor="website">{t('personal_info.website')}</Label>
 									<Input
 										id="website"
 										name="website"
 										type="url"
 										value={formData.website}
 										onChange={handleInputChange}
-										placeholder="https://www.dinverkstad.se"
+										placeholder={t('personal_info.website_placeholder')}
 									/>
 								</div>
 							</div>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div>
-									<Label htmlFor="password">Lösenord</Label>
-									<Input
-										id="password"
-										name="password"
-										type="password"
-										value={formData.password}
-										onChange={handleInputChange}
-										required
-										placeholder="Minst 8 tecken"
-									/>
+									<Label htmlFor="password">{t('personal_info.password')}</Label>
+									<div className="relative">
+										<Input
+											id="password"
+											name="password"
+											type={showPassword ? 'text' : 'password'}
+											value={formData.password}
+											onChange={handleInputChange}
+											required
+											placeholder={t('personal_info.password_placeholder')}
+											className="pr-10"
+										/>
+										<button
+											type="button"
+											onClick={() => setShowPassword(!showPassword)}
+											className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+										>
+											{showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+										</button>
+									</div>
 								</div>
 								<div>
-									<Label htmlFor="confirmPassword">Bekräfta lösenord</Label>
-									<Input
-										id="confirmPassword"
-										name="confirmPassword"
-										type="password"
-										value={formData.confirmPassword}
-										onChange={handleInputChange}
-										required
-										placeholder="Bekräfta ditt lösenord"
-									/>
+									<Label htmlFor="confirmPassword">{t('personal_info.confirm_password')}</Label>
+									<div className="relative">
+										<Input
+											id="confirmPassword"
+											name="confirmPassword"
+											type={showConfirmPassword ? 'text' : 'password'}
+											value={formData.confirmPassword}
+											onChange={handleInputChange}
+											required
+											placeholder={t('personal_info.confirm_password_placeholder')}
+											className="pr-10"
+										/>
+										<button
+											type="button"
+											onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+											className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+										>
+											{showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+										</button>
+									</div>
 								</div>
 							</div>
 						</CardContent>
@@ -339,78 +363,78 @@ export default function WorkshopSignupPage() {
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<Building2 className="w-5 h-5" />
-								Företagsinformation
+								{t('company_info.title')}
 							</CardTitle>
-							<CardDescription>Information om din verkstad</CardDescription>
+							<CardDescription>{t('company_info.description')}</CardDescription>
 						</CardHeader>
 						<CardContent className="space-y-4">
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div>
-									<Label htmlFor="companyName">Företagsnamn</Label>
+									<Label htmlFor="companyName">{t('company_info.company_name')}</Label>
 									<Input
 										id="companyName"
 										name="companyName"
 										value={formData.companyName}
 										onChange={handleInputChange}
 										required
-										placeholder="Din Verkstad AB"
+										placeholder={t('company_info.company_name_placeholder')}
 									/>
 								</div>
 								<div>
-									<Label htmlFor="organizationNumber">Organisationsnummer</Label>
+									<Label htmlFor="organizationNumber">{t('company_info.organization_number')}</Label>
 									<Input
 										id="organizationNumber"
 										name="organizationNumber"
 										value={formData.organizationNumber}
 										onChange={handleInputChange}
 										required
-										placeholder="123456-7890"
+										placeholder={t('company_info.organization_number_placeholder')}
 									/>
 								</div>
 							</div>
 							<div>
-								<Label htmlFor="address">Adress</Label>
+								<Label htmlFor="address">{t('company_info.address')}</Label>
 								<Input
 									id="address"
 									name="address"
 									value={formData.address}
 									onChange={handleInputChange}
 									required
-									placeholder="Gatunamn 123"
+									placeholder={t('company_info.address_placeholder')}
 								/>
 							</div>
 							<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 								<div>
-									<Label htmlFor="city">Stad</Label>
+									<Label htmlFor="city">{t('company_info.city')}</Label>
 									<Input
 										id="city"
 										name="city"
 										value={formData.city}
 										onChange={handleInputChange}
 										required
-										placeholder="Stockholm"
+										placeholder={t('company_info.city_placeholder')}
 									/>
 								</div>
 								<div>
-									<Label htmlFor="postalCode">Postnummer</Label>
+									<Label htmlFor="postalCode">{t('company_info.postal_code')}</Label>
 									<Input
 										id="postalCode"
 										name="postalCode"
 										value={formData.postalCode}
 										onChange={handleInputChange}
 										required
-										placeholder="123 45"
+										placeholder={t('company_info.postal_code_placeholder')}
 									/>
 								</div>
 							</div>
 							<div>
-								<Label htmlFor="description">Beskrivning av verkstaden</Label>
+								<Label htmlFor="description">{t('company_info.description')}</Label>
 								<Textarea
 									id="description"
 									name="description"
 									value={formData.description}
 									onChange={handleInputChange}
-									placeholder="Beskriv din verkstad, specialiteter, erfarenhet..."
+									placeholder={t('company_info.description_placeholder')}
 									rows={3}
 								/>
 							</div>
@@ -422,9 +446,9 @@ export default function WorkshopSignupPage() {
 						<CardHeader>
 							<CardTitle className="flex items-center gap-2">
 								<Clock className="w-5 h-5" />
-								Öppettider
+								{t('opening_hours.title')}
 							</CardTitle>
-							<CardDescription>Ange dina öppettider</CardDescription>
+							<CardDescription>{t('opening_hours.description')}</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -432,19 +456,7 @@ export default function WorkshopSignupPage() {
 									(day) => (
 										<div key={day} className="space-y-2">
 											<Label className="capitalize">
-												{day === 'monday'
-													? 'Måndag'
-													: day === 'tuesday'
-														? 'Tisdag'
-														: day === 'wednesday'
-															? 'Onsdag'
-															: day === 'thursday'
-																? 'Torsdag'
-																: day === 'friday'
-																	? 'Fredag'
-																	: day === 'saturday'
-																		? 'Lördag'
-																		: 'Söndag'}
+												{t(`opening_hours.days.${day}`)}
 											</Label>
 											<div className="flex gap-2">
 												<Input
@@ -453,7 +465,7 @@ export default function WorkshopSignupPage() {
 													onChange={(e) =>
 														setFormData((prev) => ({ ...prev, [`${day}Open`]: e.target.value }))
 													}
-													placeholder="Öppet"
+													placeholder={t('opening_hours.open')}
 												/>
 												<Input
 													type="time"
@@ -461,7 +473,7 @@ export default function WorkshopSignupPage() {
 													onChange={(e) =>
 														setFormData((prev) => ({ ...prev, [`${day}Close`]: e.target.value }))
 													}
-													placeholder="Stängt"
+													placeholder={t('opening_hours.close')}
 												/>
 											</div>
 										</div>
@@ -474,8 +486,8 @@ export default function WorkshopSignupPage() {
 					{/* Brands */}
 					<Card>
 						<CardHeader>
-							<CardTitle>Bilmärken</CardTitle>
-							<CardDescription>Välj vilka bilmärken du arbetar med</CardDescription>
+							<CardTitle>{t('brands.title')}</CardTitle>
+							<CardDescription>{t('brands.description')}</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -497,10 +509,8 @@ export default function WorkshopSignupPage() {
 					{/* Documents */}
 					<Card>
 						<CardHeader>
-							<CardTitle>Dokument</CardTitle>
-							<CardDescription>
-								Ladda upp F-skattsedel, ansvarsförsäkring och andra relevanta dokument
-							</CardDescription>
+							<CardTitle>{t('documents.title')}</CardTitle>
+							<CardDescription>{t('documents.description')}</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<div
@@ -514,20 +524,20 @@ export default function WorkshopSignupPage() {
 								<input {...getInputProps()} />
 								<Upload className="w-12 h-12 mx-auto mb-4 text-gray-400" />
 								{isDragActive ? (
-									<p className="text-lg text-primary">Släpp filerna här...</p>
+									<p className="text-lg text-primary">{t('documents.drop_here')}</p>
 								) : (
 									<div>
 										<p className="text-lg text-gray-600 mb-2">
-											Dra och släpp dokument här, eller klicka för att välja
+											{t('documents.drag_drop')}
 										</p>
-										<p className="text-sm text-gray-500">JPG, PNG, PDF upp till 10MB</p>
+										<p className="text-sm text-gray-500">{t('documents.file_types')}</p>
 									</div>
 								)}
 							</div>
 
 							{documents.length > 0 && (
 								<div className="mt-6 space-y-2">
-									<h4 className="font-medium">Uppladdade dokument:</h4>
+									<h4 className="font-medium">{t('documents.uploaded_documents')}</h4>
 									{documents.map((file, index) => (
 										<div
 											key={index}
@@ -560,16 +570,16 @@ export default function WorkshopSignupPage() {
 					{/* Submit */}
 					<div className="flex justify-end">
 						<Button type="submit" size="lg" disabled={isSubmitting}>
-							{isSubmitting ? 'Skickar ansökan...' : 'Skicka ansökan'}
+							{isSubmitting ? t('submitting') : t('submit')}
 						</Button>
 					</div>
 				</form>
 
 				<div className="text-center mt-8">
 					<p className="text-sm text-gray-600">
-						Har du redan ett konto?{' '}
-						<Link href="/auth/signin" className="font-medium text-primary hover:text-primary/80">
-							Logga in här
+						{t('already_account')}{' '}
+						<Link href={`/${locale}/auth/signin`} className="font-medium text-primary hover:text-primary/80">
+							{t('sign_in_here')}
 						</Link>
 					</p>
 				</div>

@@ -18,7 +18,8 @@
 		"no": "No",
 		"required": "Required",
 		"optional": "Optional",
-		"or": "Or"
+		"or": "Or",
+		"admin_tagline": "Manage & Monitor"
 	},
 	"navigation": {
 		"home": "Home",
@@ -48,6 +49,7 @@
 		},
 		"features": {
 			"title": "Why choose Fixa2an?",
+			"subtitle": "We connect you with trusted, verified workshops. Get competitive offers, transparent pricing, and secure payments - all in one place.",
 			"verified": {"title": "Verified workshops", "description": "All workshops are checked and have valid certificates."},
 			"fast": {"title": "Fast offers", "description": "Get offers within 24 hours from workshops in your area."},
 			"transparent": {"title": "Transparent prices", "description": "Compare prices, times and reviews before you decide."},
@@ -163,6 +165,7 @@
 		"warranty": "Warranty",
 		"available_times": "Available Times",
 		"select_time": "Select a time slot",
+		"no_available_times": "No available times for this offer. Please contact the workshop.",
 		"booking_form": {
 			"title": "Complete Booking",
 			"selected_time": "Selected time",
@@ -203,26 +206,281 @@
 		"dashboard": {
 			"title": "Workshop dashboard",
 			"subtitle": "Manage your requests and offers",
-			"stats": {"total_requests": "Total requests", "active_offers": "Active offers", "completed_jobs": "Completed jobs", "total_revenue": "Total revenue"},
-			"requests": {"title": "Requests", "subtitle": "New requests you can send offers for", "no_requests": {"title": "No requests", "description": "There are no new requests right now. Come back later."}}
+			"loading": "Loading dashboard...",
+			"stats": {
+				"total_requests": "Total requests",
+				"total_requests_desc": "+12% from last month",
+				"active_offers": "Active offers",
+				"active_offers_desc": "Waiting for response",
+				"completed_jobs": "Completed jobs",
+				"completed_jobs_desc": "This month",
+				"total_revenue": "Total revenue",
+				"total_revenue_desc": "This month"
+			},
+			"status": {
+				"new": "New",
+				"in_bidding": "Open for bids",
+				"bidding_closed": "Closed",
+				"booked": "Booked",
+				"completed": "Completed",
+				"cancelled": "Cancelled"
+			},
+			"requests": {
+				"title": "Requests",
+				"subtitle": "New requests you can send offers for",
+				"view_all": "View All Requests",
+				"from": "From",
+				"vehicle_info": "Vehicle Information",
+				"customer_info": "Customer Information",
+				"actions": "Actions",
+				"view_details": "View details",
+				"send_offer": "Send offer",
+				"view_my_offer": "View my offer",
+				"your_offer": "Your offer",
+				"offer_accepted": "Accepted",
+				"offer_pending": "Pending",
+				"year": "Year",
+				"no_requests": {
+					"title": "No requests",
+					"description": "There are no new requests right now. Come back later."
+				}
+			}
 		},
 		"signup": {
 			"title": "Register your workshop",
 			"subtitle": "Become part of our network of verified workshops",
-			"personal_info": {"title": "Personal information", "description": "Your contact information as workshop manager"},
-			"company_info": {"title": "Company information", "description": "Information about your workshop"},
-			"opening_hours": {"title": "Opening hours", "description": "Enter your opening hours"},
-			"brands": {"title": "Car brands", "description": "Select which car brands you work with"},
-			"documents": {"title": "Documents", "description": "Upload F-tax certificate, liability insurance and other relevant documents"},
+			"personal_info": {
+				"title": "Personal information",
+				"description": "Your contact information as workshop manager",
+				"name": "Name",
+				"email": "Email address",
+				"phone": "Phone number",
+				"website": "Website (optional)",
+				"password": "Password",
+				"confirm_password": "Confirm password",
+				"name_placeholder": "Your full name",
+				"email_placeholder": "your@email.com",
+				"phone_placeholder": "070-123 45 67",
+				"website_placeholder": "https://www.yourworkshop.com",
+				"password_placeholder": "At least 8 characters",
+				"confirm_password_placeholder": "Confirm your password"
+			},
+			"company_info": {
+				"title": "Company information",
+				"description": "Information about your workshop",
+				"company_name": "Company name",
+				"organization_number": "Organization number",
+				"address": "Address",
+				"city": "City",
+				"postal_code": "Postal code",
+				"description": "Workshop description",
+				"company_name_placeholder": "Your Workshop AB",
+				"organization_number_placeholder": "123456-7890",
+				"address_placeholder": "Street name 123",
+				"city_placeholder": "Stockholm",
+				"postal_code_placeholder": "123 45",
+				"description_placeholder": "Describe your workshop, specialties, experience..."
+			},
+			"opening_hours": {
+				"title": "Opening hours",
+				"description": "Enter your opening hours",
+				"days": {
+					"monday": "Monday",
+					"tuesday": "Tuesday",
+					"wednesday": "Wednesday",
+					"thursday": "Thursday",
+					"friday": "Friday",
+					"saturday": "Saturday",
+					"sunday": "Sunday"
+				},
+				"open": "Open",
+				"close": "Closed"
+			},
+			"brands": {
+				"title": "Car brands",
+				"description": "Select which car brands you work with"
+			},
+			"documents": {
+				"title": "Documents",
+				"description": "Upload F-tax certificate, liability insurance and other relevant documents",
+				"drag_drop": "Drag and drop documents here, or click to select",
+				"file_types": "JPG, PNG, PDF up to 10MB",
+				"drop_here": "Drop files here...",
+				"uploaded_documents": "Uploaded documents:"
+			},
 			"submit": "Send application",
-			"submitting": "Sending application..."
+			"submitting": "Sending application...",
+			"already_account": "Already have an account?",
+			"sign_in_here": "Sign in here",
+			"registration_sent": "Registration sent",
+			"registration_sent_message": "Your application has been sent. We will review it and contact you soon."
 		}
 	},
 	"admin": {
 		"title": "Admin Panel",
-		"subtitle": "Manage the system and monitor activity",
-		"stats": {"customers": "Customers", "workshops": "Workshops", "requests": "Requests", "monthly_revenue": "Monthly revenue"},
-		"pending_workshops": {"title": "Workshops waiting for approval", "subtitle": "Review and approve new workshops", "no_pending": {"title": "All workshops are approved", "description": "There are no workshops waiting for approval."}, "approve": "Approve", "reject": "Reject", "see_details": "See details"}
+		"subtitle": "Manage & Monitor Your Platform",
+		"tabs": {
+			"dashboard": "Dashboard",
+			"customers": "Customers",
+			"workshops": "Workshops",
+			"requests": "Requests",
+			"offers": "Offers",
+			"bookings": "Bookings",
+			"payouts": "Payouts & Commission"
+		},
+		"stats": {
+			"customers": "Customers",
+			"workshops": "Workshops",
+			"requests": "Requests",
+			"monthly_revenue": "Monthly revenue",
+			"total_revenue": "Total revenue",
+			"pending_workshops": "Pending workshops",
+			"total_bookings": "Total bookings"
+		},
+		"customers": {
+			"title": "Manage Customers",
+			"search": "Search customers...",
+			"name": "Name",
+			"email": "Email",
+			"phone": "Phone",
+			"city": "City",
+			"requests": "Requests",
+			"bookings": "Bookings",
+			"status": "Status",
+			"active": "Active",
+			"inactive": "Inactive",
+			"deactivate": "Deactivate",
+			"activate": "Activate",
+			"no_customers": "No customers found"
+		},
+		"workshops": {
+			"title": "Manage Workshops",
+			"search": "Search workshops...",
+			"company": "Company",
+			"org_number": "Org. Number",
+			"email": "Email",
+			"verified": "Verified",
+			"not_verified": "Not Verified",
+			"active": "Active",
+			"blocked": "Blocked",
+			"approve": "Approve",
+			"reject": "Reject",
+			"block": "Block",
+			"unblock": "Unblock",
+			"mark_verified": "Mark as Verified",
+			"see_details": "See Details",
+			"pending_workshops": "Workshops waiting for approval",
+			"no_pending": "All workshops are approved",
+			"no_workshops": "No workshops found",
+			"offers": "Offers",
+			"bookings": "Bookings",
+			"reviews": "Reviews"
+		},
+		"requests": {
+			"title": "Manage Requests",
+			"search": "Search requests...",
+			"customer": "Customer",
+			"vehicle": "Vehicle",
+			"status": "Status",
+			"offers": "Offers",
+			"created": "Created",
+			"expires": "Expires",
+			"no_requests": "No requests found",
+			"new": "New",
+			"in_bidding": "In Bidding",
+			"bidding_closed": "Bidding Closed",
+			"booked": "Booked",
+			"completed": "Completed",
+			"cancelled": "Cancelled"
+		},
+		"offers": {
+			"title": "Manage Offers",
+			"workshop": "Workshop",
+			"request": "Request",
+			"price": "Price",
+			"status": "Status",
+			"created": "Created",
+			"no_offers": "No offers found",
+			"sent": "Sent",
+			"accepted": "Accepted",
+			"declined": "Declined",
+			"expired": "Expired"
+		},
+		"bookings": {
+			"title": "Manage Bookings",
+			"customer": "Customer",
+			"workshop": "Workshop",
+			"scheduled": "Scheduled",
+			"status": "Status",
+			"amount": "Amount",
+			"commission": "Commission",
+			"no_bookings": "No bookings found",
+			"confirmed": "Confirmed",
+			"rescheduled": "Rescheduled",
+			"cancelled": "Cancelled",
+			"done": "Done",
+			"no_show": "No Show"
+		},
+		"payouts": {
+			"title": "Payouts & Commission",
+			"subtitle": "Generate and manage monthly payout reports",
+			"generate": "Generate Reports",
+			"month": "Month",
+			"year": "Year",
+			"workshop": "Workshop",
+			"total_jobs": "Total Jobs",
+			"total_amount": "Total Amount",
+			"commission": "Commission",
+			"workshop_amount": "Workshop Amount",
+			"status": "Status",
+			"paid": "Paid",
+			"unpaid": "Unpaid",
+			"mark_paid": "Mark as Paid",
+			"export_csv": "Export CSV",
+			"export_pdf": "Export PDF",
+			"no_reports": "No payout reports found",
+			"generating": "Generating reports...",
+			"select_month_year": "Select month and year to generate reports"
+		},
+		"filters": {
+			"all": "All",
+			"filter": "Filter",
+			"reset": "Reset"
+		},
+		"pagination": {
+			"showing": "Showing",
+			"to": "to",
+			"of": "of",
+			"results": "results"
+		},
+		"common": {
+			"admin": "Admin",
+			"logout": "Logout",
+			"loading": "Loading...",
+			"success": "Success",
+			"error": "Error",
+			"actions": "Actions",
+			"pending": "Pending",
+			"registered": "Registered",
+			"total_registered": "Total registered",
+			"active_requests": "Active requests",
+			"this_month": "This month",
+			"review_approve": "Review and approve new workshop applications",
+			"all_approved": "All workshops have been reviewed and approved.",
+			"loading_customers": "Loading customers...",
+			"no_customers_search": "No customers found matching your search.",
+			"workshop_approved": "Workshop approved successfully",
+			"workshop_rejected": "Workshop rejected successfully",
+			"workshop_blocked": "Workshop blocked successfully",
+			"workshop_unblocked": "Workshop unblocked successfully",
+			"failed_update_workshop": "Failed to update workshop",
+			"generated_reports_one": "Generated 1 payout report",
+			"generated_reports_other": "Generated {count} payout reports",
+			"payout_marked_paid": "Payout marked as paid",
+			"failed_mark_paid": "Failed to mark payout as paid",
+			"failed_generate_reports": "Failed to generate payout reports",
+			"could_not_fetch": "Could not fetch data"
+		}
 	},
 	"errors": {
 		"invalid_credentials": "Invalid login credentials",
@@ -231,9 +489,11 @@
 		"password_mismatch": "Passwords do not match",
 		"password_too_short": "Password must be at least 6 characters",
 		"file_required": "You must upload at least one file",
+		"documents_required": "You must upload at least one document (F-tax certificate or liability insurance)",
 		"vehicle_info_required": "Fill in the car's make and model",
 		"upload_failed": "Something went wrong with the upload. Please try again.",
-		"registration_failed": "Something went wrong with the registration. Please try again."
+		"registration_failed": "Something went wrong with the registration. Please try again.",
+		"fetch_failed": "Could not fetch data"
 	},
 	"success": {
 		"account_created": "Account created",

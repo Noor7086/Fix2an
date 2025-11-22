@@ -50,9 +50,9 @@ export default function OffersPage() {
 	const [offers, setOffers] = useState<Offer[]>([])
 	const [loading, setLoading] = useState(true)
 	const [sortBy, setSortBy] = useState('price')
-	const [filterPrice, setFilterPrice] = useState('')
-	const [filterDistance, setFilterDistance] = useState('')
-	const [filterRating, setFilterRating] = useState('')
+	const [filterPrice, setFilterPrice] = useState('all')
+	const [filterDistance, setFilterDistance] = useState('all')
+	const [filterRating, setFilterRating] = useState('all')
 
 	useEffect(() => {
 		if (requestId) {
@@ -67,9 +67,9 @@ export default function OffersPage() {
 		try {
 			const params = new URLSearchParams()
 			params.append('sortBy', sortBy)
-			if (filterPrice) params.append('filterPrice', filterPrice)
-			if (filterDistance) params.append('filterDistance', filterDistance)
-			if (filterRating) params.append('filterRating', filterRating)
+			if (filterPrice && filterPrice !== 'all') params.append('filterPrice', filterPrice)
+			if (filterDistance && filterDistance !== 'all') params.append('filterDistance', filterDistance)
+			if (filterRating && filterRating !== 'all') params.append('filterRating', filterRating)
 
 			const response = await fetch(`/api/offers?requestId=${requestId}&${params.toString()}`)
 			if (response.ok) {
@@ -145,7 +145,7 @@ export default function OffersPage() {
 										<SelectValue placeholder={t('filter.all')} />
 									</SelectTrigger>
 									<SelectContent>
-										<SelectItem value="">{t('filter.all')}</SelectItem>
+										<SelectItem value="all">{t('filter.all')}</SelectItem>
 										<SelectItem value="0-5000">0 - 5,000 SEK</SelectItem>
 										<SelectItem value="5000-10000">5,000 - 10,000 SEK</SelectItem>
 										<SelectItem value="10000-20000">10,000 - 20,000 SEK</SelectItem>
@@ -160,7 +160,7 @@ export default function OffersPage() {
 										<SelectValue placeholder={t('filter.all')} />
 									</SelectTrigger>
 									<SelectContent>
-										<SelectItem value="">{t('filter.all')}</SelectItem>
+										<SelectItem value="all">{t('filter.all')}</SelectItem>
 										<SelectItem value="10">≤ 10 km</SelectItem>
 										<SelectItem value="20">≤ 20 km</SelectItem>
 										<SelectItem value="30">≤ 30 km</SelectItem>
@@ -174,7 +174,7 @@ export default function OffersPage() {
 										<SelectValue placeholder={t('filter.all')} />
 									</SelectTrigger>
 									<SelectContent>
-										<SelectItem value="">{t('filter.all')}</SelectItem>
+										<SelectItem value="all">{t('filter.all')}</SelectItem>
 										<SelectItem value="4">4+ stars</SelectItem>
 										<SelectItem value="3">3+ stars</SelectItem>
 									</SelectContent>

@@ -18,7 +18,8 @@
 		"no": "Nej",
 		"required": "Obligatoriskt",
 		"optional": "Valfritt",
-		"or": "Eller"
+		"or": "Eller",
+		"admin_tagline": "Hantera & Övervaka"
 	},
 	"navigation": {
 		"home": "Hem",
@@ -45,6 +46,7 @@
 		},
 		"features": {
 			"title": "Varför välja Fixa2an?",
+			"subtitle": "Vi kopplar dig med pålitliga, verifierade verkstäder. Få konkurrenskraftiga erbjudanden, transparenta priser och säkra betalningar - allt på ett ställe.",
 			"verified": {"title": "Verifierade verkstäder", "description": "Alla verkstäder är kontrollerade och har giltiga certifikat."},
 			"fast": {"title": "Snabba erbjudanden", "description": "Få erbjudanden inom 24 timmar från verkstäder i ditt område."},
 			"transparent": {"title": "Transparenta priser", "description": "Jämför priser, tider och recensioner innan du bestämmer dig."},
@@ -169,6 +171,7 @@
 		"warranty": "Garanti",
 		"available_times": "Tillgängliga tider",
 		"select_time": "Välj en tidslucka",
+		"no_available_times": "Inga tillgängliga tider för detta erbjudande. Vänligen kontakta verkstaden.",
 		"booking_form": {
 			"title": "Slutför bokning",
 			"selected_time": "Vald tid",
@@ -188,26 +191,281 @@
 		"dashboard": {
 			"title": "Verkstadsdashboard",
 			"subtitle": "Hantera dina förfrågningar och erbjudanden",
-			"stats": {"total_requests": "Totala förfrågningar", "active_offers": "Aktiva erbjudanden", "completed_jobs": "Genomförda jobb", "total_revenue": "Total omsättning"},
-			"requests": {"title": "Förfrågningar", "subtitle": "Nya förfrågningar som du kan skicka erbjudanden på", "no_requests": {"title": "Inga förfrågningar", "description": "Det finns inga nya förfrågningar just nu. Kom tillbaka senare."}}
+			"loading": "Laddar dashboard...",
+			"stats": {
+				"total_requests": "Totala förfrågningar",
+				"total_requests_desc": "+12% från förra månaden",
+				"active_offers": "Aktiva erbjudanden",
+				"active_offers_desc": "Väntar på svar",
+				"completed_jobs": "Genomförda jobb",
+				"completed_jobs_desc": "Denna månad",
+				"total_revenue": "Total omsättning",
+				"total_revenue_desc": "Denna månad"
+			},
+			"status": {
+				"new": "Ny",
+				"in_bidding": "Öppen för bud",
+				"bidding_closed": "Stängd",
+				"booked": "Bokad",
+				"completed": "Klar",
+				"cancelled": "Avbruten"
+			},
+			"requests": {
+				"title": "Förfrågningar",
+				"subtitle": "Nya förfrågningar som du kan skicka erbjudanden på",
+				"view_all": "Visa alla förfrågningar",
+				"from": "Från",
+				"vehicle_info": "Bilinformation",
+				"customer_info": "Kundinformation",
+				"actions": "Åtgärder",
+				"view_details": "Se detaljer",
+				"send_offer": "Skicka erbjudande",
+				"view_my_offer": "Se ditt erbjudande",
+				"your_offer": "Ditt erbjudande",
+				"offer_accepted": "Accepterat",
+				"offer_pending": "Väntar",
+				"year": "År",
+				"no_requests": {
+					"title": "Inga förfrågningar",
+					"description": "Det finns inga nya förfrågningar just nu. Kom tillbaka senare."
+				}
+			}
 		},
 		"signup": {
 			"title": "Registrera din verkstad",
 			"subtitle": "Bli en del av vårt nätverk av verifierade verkstäder",
-			"personal_info": {"title": "Personlig information", "description": "Din kontaktinformation som verkstadsansvarig"},
-			"company_info": {"title": "Företagsinformation", "description": "Information om din verkstad"},
-			"opening_hours": {"title": "Öppettider", "description": "Ange dina öppettider"},
-			"brands": {"title": "Bilmärken", "description": "Välj vilka bilmärken du arbetar med"},
-			"documents": {"title": "Dokument", "description": "Ladda upp F-skattsedel, ansvarsförsäkring och andra relevanta dokument"},
+			"personal_info": {
+				"title": "Personlig information",
+				"description": "Din kontaktinformation som verkstadsansvarig",
+				"name": "Namn",
+				"email": "E-postadress",
+				"phone": "Telefonnummer",
+				"website": "Webbplats (valfritt)",
+				"password": "Lösenord",
+				"confirm_password": "Bekräfta lösenord",
+				"name_placeholder": "Ditt fullständiga namn",
+				"email_placeholder": "din@epost.se",
+				"phone_placeholder": "070-123 45 67",
+				"website_placeholder": "https://www.dinverkstad.se",
+				"password_placeholder": "Minst 8 tecken",
+				"confirm_password_placeholder": "Bekräfta ditt lösenord"
+			},
+			"company_info": {
+				"title": "Företagsinformation",
+				"description": "Information om din verkstad",
+				"company_name": "Företagsnamn",
+				"organization_number": "Organisationsnummer",
+				"address": "Adress",
+				"city": "Stad",
+				"postal_code": "Postnummer",
+				"description": "Beskrivning av verkstaden",
+				"company_name_placeholder": "Din Verkstad AB",
+				"organization_number_placeholder": "123456-7890",
+				"address_placeholder": "Gatunamn 123",
+				"city_placeholder": "Stockholm",
+				"postal_code_placeholder": "123 45",
+				"description_placeholder": "Beskriv din verkstad, specialiteter, erfarenhet..."
+			},
+			"opening_hours": {
+				"title": "Öppettider",
+				"description": "Ange dina öppettider",
+				"days": {
+					"monday": "Måndag",
+					"tuesday": "Tisdag",
+					"wednesday": "Onsdag",
+					"thursday": "Torsdag",
+					"friday": "Fredag",
+					"saturday": "Lördag",
+					"sunday": "Söndag"
+				},
+				"open": "Öppet",
+				"close": "Stängt"
+			},
+			"brands": {
+				"title": "Bilmärken",
+				"description": "Välj vilka bilmärken du arbetar med"
+			},
+			"documents": {
+				"title": "Dokument",
+				"description": "Ladda upp F-skattsedel, ansvarsförsäkring och andra relevanta dokument",
+				"drag_drop": "Dra och släpp dokument här, eller klicka för att välja",
+				"file_types": "JPG, PNG, PDF upp till 10MB",
+				"drop_here": "Släpp filerna här...",
+				"uploaded_documents": "Uppladdade dokument:"
+			},
 			"submit": "Skicka ansökan",
-			"submitting": "Skickar ansökan..."
+			"submitting": "Skickar ansökan...",
+			"already_account": "Har du redan ett konto?",
+			"sign_in_here": "Logga in här",
+			"registration_sent": "Registrering skickad",
+			"registration_sent_message": "Din ansökan har skickats. Vi kommer att granska den och kontakta dig snart."
 		}
 	},
 	"admin": {
 		"title": "Admin Panel",
-		"subtitle": "Hantera systemet och övervaka aktivitet",
-		"stats": {"customers": "Kunder", "workshops": "Verkstäder", "requests": "Förfrågningar", "monthly_revenue": "Månadsomsättning"},
-		"pending_workshops": {"title": "Verkstäder som väntar på godkännande", "subtitle": "Granska och godkänn nya verkstäder", "no_pending": {"title": "Alla verkstäder är godkända", "description": "Det finns inga verkstäder som väntar på godkännande."}, "approve": "Godkänn", "reject": "Avvisa", "see_details": "Se detaljer"}
+		"subtitle": "Hantera & Övervaka Din Plattform",
+		"tabs": {
+			"dashboard": "Dashboard",
+			"customers": "Kunder",
+			"workshops": "Verkstäder",
+			"requests": "Förfrågningar",
+			"offers": "Erbjudanden",
+			"bookings": "Bokningar",
+			"payouts": "Utbetalningar & Provision"
+		},
+		"stats": {
+			"customers": "Kunder",
+			"workshops": "Verkstäder",
+			"requests": "Förfrågningar",
+			"monthly_revenue": "Månadsomsättning",
+			"total_revenue": "Total omsättning",
+			"pending_workshops": "Väntande verkstäder",
+			"total_bookings": "Totalt antal bokningar"
+		},
+		"customers": {
+			"title": "Hantera kunder",
+			"search": "Sök kunder...",
+			"name": "Namn",
+			"email": "E-post",
+			"phone": "Telefon",
+			"city": "Stad",
+			"requests": "Förfrågningar",
+			"bookings": "Bokningar",
+			"status": "Status",
+			"active": "Aktiv",
+			"inactive": "Inaktiv",
+			"deactivate": "Inaktivera",
+			"activate": "Aktivera",
+			"no_customers": "Inga kunder hittades"
+		},
+		"workshops": {
+			"title": "Hantera verkstäder",
+			"search": "Sök verkstäder...",
+			"company": "Företag",
+			"org_number": "Org. nummer",
+			"email": "E-post",
+			"verified": "Verifierad",
+			"not_verified": "Inte verifierad",
+			"active": "Aktiv",
+			"blocked": "Blockerad",
+			"approve": "Godkänn",
+			"reject": "Avvisa",
+			"block": "Blockera",
+			"unblock": "Avblockera",
+			"mark_verified": "Markera som verifierad",
+			"see_details": "Se detaljer",
+			"pending_workshops": "Verkstäder som väntar på godkännande",
+			"no_pending": "Alla verkstäder är godkända",
+			"no_workshops": "Inga verkstäder hittades",
+			"offers": "Erbjudanden",
+			"bookings": "Bokningar",
+			"reviews": "Recensioner"
+		},
+		"requests": {
+			"title": "Hantera förfrågningar",
+			"search": "Sök förfrågningar...",
+			"customer": "Kund",
+			"vehicle": "Fordon",
+			"status": "Status",
+			"offers": "Erbjudanden",
+			"created": "Skapad",
+			"expires": "Går ut",
+			"no_requests": "Inga förfrågningar hittades",
+			"new": "Ny",
+			"in_bidding": "Pågående budgivning",
+			"bidding_closed": "Budgivning stängd",
+			"booked": "Bokad",
+			"completed": "Klar",
+			"cancelled": "Inställd"
+		},
+		"offers": {
+			"title": "Hantera erbjudanden",
+			"workshop": "Verkstad",
+			"request": "Förfrågan",
+			"price": "Pris",
+			"status": "Status",
+			"created": "Skapad",
+			"no_offers": "Inga erbjudanden hittades",
+			"sent": "Skickad",
+			"accepted": "Accepterad",
+			"declined": "Avvisad",
+			"expired": "Utgången"
+		},
+		"bookings": {
+			"title": "Hantera bokningar",
+			"customer": "Kund",
+			"workshop": "Verkstad",
+			"scheduled": "Schemalagd",
+			"status": "Status",
+			"amount": "Belopp",
+			"commission": "Provision",
+			"no_bookings": "Inga bokningar hittades",
+			"confirmed": "Bekräftad",
+			"rescheduled": "Omschemalagd",
+			"cancelled": "Inställd",
+			"done": "Klar",
+			"no_show": "No Show"
+		},
+		"payouts": {
+			"title": "Utbetalningar & Provision",
+			"subtitle": "Generera och hantera månadsrapporter för utbetalningar",
+			"generate": "Generera rapporter",
+			"month": "Månad",
+			"year": "År",
+			"workshop": "Verkstad",
+			"total_jobs": "Totalt antal jobb",
+			"total_amount": "Totalt belopp",
+			"commission": "Provision",
+			"workshop_amount": "Verkstadsbelopp",
+			"status": "Status",
+			"paid": "Betald",
+			"unpaid": "Obetald",
+			"mark_paid": "Markera som betald",
+			"export_csv": "Exportera CSV",
+			"export_pdf": "Exportera PDF",
+			"no_reports": "Inga utbetalningsrapporter hittades",
+			"generating": "Genererar rapporter...",
+			"select_month_year": "Välj månad och år för att generera rapporter"
+		},
+		"filters": {
+			"all": "Alla",
+			"filter": "Filtrera",
+			"reset": "Återställ"
+		},
+		"pagination": {
+			"showing": "Visar",
+			"to": "till",
+			"of": "av",
+			"results": "resultat"
+		},
+		"common": {
+			"admin": "Admin",
+			"logout": "Logga ut",
+			"loading": "Laddar...",
+			"success": "Framgång",
+			"error": "Fel",
+			"actions": "Åtgärder",
+			"pending": "Väntande",
+			"registered": "Registrerad",
+			"total_registered": "Totalt registrerade",
+			"active_requests": "Aktiva förfrågningar",
+			"this_month": "Denna månad",
+			"review_approve": "Granska och godkänn nya verkstadsansökningar",
+			"all_approved": "Alla verkstäder har granskats och godkänts.",
+			"loading_customers": "Laddar kunder...",
+			"no_customers_search": "Inga kunder hittades som matchar din sökning.",
+			"workshop_approved": "Verkstad godkänd framgångsrikt",
+			"workshop_rejected": "Verkstad avvisad framgångsrikt",
+			"workshop_blocked": "Verkstad blockerad framgångsrikt",
+			"workshop_unblocked": "Verkstad avblockerad framgångsrikt",
+			"failed_update_workshop": "Kunde inte uppdatera verkstad",
+			"generated_reports_one": "Genererade 1 utbetalningsrapport",
+			"generated_reports_other": "Genererade {count} utbetalningsrapporter",
+			"payout_marked_paid": "Utbetalning markerad som betald",
+			"failed_mark_paid": "Kunde inte markera utbetalning som betald",
+			"failed_generate_reports": "Kunde inte generera utbetalningsrapporter",
+			"could_not_fetch": "Kunde inte hämta data"
+		}
 	},
 	"errors": {
 		"invalid_credentials": "Ogiltiga inloggningsuppgifter",
@@ -216,9 +474,11 @@
 		"password_mismatch": "Lösenorden matchar inte",
 		"password_too_short": "Lösenordet måste vara minst 6 tecken",
 		"file_required": "Du måste ladda upp minst en fil",
+		"documents_required": "Du måste ladda upp minst ett dokument (F-skattsedel eller ansvarsförsäkring)",
 		"vehicle_info_required": "Fyll i bilens märke och modell",
 		"upload_failed": "Något gick fel vid uppladdningen. Försök igen.",
-		"registration_failed": "Något gick fel vid registreringen. Försök igen."
+		"registration_failed": "Något gick fel vid registreringen. Försök igen.",
+		"fetch_failed": "Kunde inte hämta data"
 	},
 	"success": {
 		"account_created": "Konto skapat",

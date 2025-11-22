@@ -41,25 +41,38 @@ const upload = multer({
 })
 
 // Single file upload endpoint (frontend uploads one at a time)
-router.post('/', upload.single('file'), async (req, res) => {
-	try {
-		if (!req.file) {
-			return res.status(400).json({ message: 'No file uploaded' })
+router.post('/', (req, res) => {
+	upload.single('file')(req, res, async (err: any) => {
+		if (err) {
+			console.error('Upload error:', err)
+			if (err.code === 'LIMIT_FILE_SIZE') {
+				return res.status(400).json({ message: 'File too large. Maximum size is 10MB.' })
+			}
+			if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+				return res.status(400).json({ message: 'Unexpected file field. Use "file" as the field name.' })
+			}
+			return res.status(400).json({ message: err.message || 'File upload failed' })
 		}
 
-		const uploadedFile = {
-			fileName: req.file.originalname,
-			fileUrl: `/uploads/${req.file.filename}`,
-			fileSize: req.file.size,
-			mimeType: req.file.mimetype,
-		}
+		try {
+			if (!req.file) {
+				return res.status(400).json({ message: 'No file uploaded' })
+			}
 
-		// For MVP, store files locally. In production, upload to S3/Cloud Storage
-		return res.status(200).json(uploadedFile)
-	} catch (error: any) {
-		console.error('Upload error:', error)
-		return res.status(500).json({ message: error.message || 'File upload failed' })
-	}
+			const uploadedFile = {
+				fileName: req.file.originalname,
+				fileUrl: `/uploads/${req.file.filename}`,
+				fileSize: req.file.size,
+				mimeType: req.file.mimetype,
+			}
+
+			// For MVP, store files locally. In production, upload to S3/Cloud Storage
+			return res.status(200).json(uploadedFile)
+		} catch (error: any) {
+			console.error('Upload processing error:', error)
+			return res.status(500).json({ message: error.message || 'File upload failed' })
+		}
+	})
 })
 
 export default router

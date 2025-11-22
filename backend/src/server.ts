@@ -62,6 +62,8 @@ import offersRouter from './routes/offers'
 app.use('/api/offers', offersRouter)
 import bookingsRouter from './routes/bookings'
 app.use('/api/bookings', bookingsRouter)
+import adminRouter from './routes/admin'
+app.use('/api/admin', adminRouter)
 
 const port = process.env.PORT ? Number(process.env.PORT) : 4000
 app.listen(port, () => {

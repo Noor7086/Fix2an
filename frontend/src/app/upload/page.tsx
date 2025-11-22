@@ -328,18 +328,20 @@ export default function UploadPage() {
 								<div>
 									<Label htmlFor="make">Bilmärke</Label>
 									<Select
-										value={vehicleData.make}
+										value={vehicleData.make || undefined}
 										onValueChange={(value) => setVehicleData((prev) => ({ ...prev, make: value }))}
 									>
 										<SelectTrigger>
 											<SelectValue placeholder="Välj märke" />
 										</SelectTrigger>
 										<SelectContent>
-											{carMakes.map((make) => (
-												<SelectItem key={make} value={make}>
-													{make}
-												</SelectItem>
-											))}
+											{carMakes
+												.filter((make) => make.trim() !== '')
+												.map((make) => (
+													<SelectItem key={make} value={make}>
+														{make}
+													</SelectItem>
+												))}
 										</SelectContent>
 									</Select>
 								</div>
